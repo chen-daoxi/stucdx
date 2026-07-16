@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>小陈同学-STUCDX | 隐私政策</title>
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"WebSite","name":"UmiVPN","url":"https://www.umivpn.com","description":"UmiVPN - 安全、快速、私密 VPN。让上网更私密、更安全、更快速。","inLanguage":"zh-Hans"}
+    </script>
+    <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"Organization","name":"5V Network LLC","url":"https://www.umivpn.com","logo":"https://www.umivpn.com/umi-thick.svg"}
+    </script>
+
+    <!-- Tailwind CSS CDN 用于简化样式 -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        primary: {
+                            DEFAULT: 'hsl(var(--primary))',
+                            foreground: 'hsl(var(--primary-foreground))'
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(var(--muted))',
+                            foreground: 'hsl(var(--muted-foreground))'
+                        },
+                        card: {
+                            DEFAULT: 'hsl(var(--card))',
+                            foreground: 'hsl(var(--card-foreground))'
+                        },
+                        border: 'hsl(var(--border))',
+                        accent: {
+                            DEFAULT: 'hsl(var(--accent))',
+                            foreground: 'hsl(var(--accent-foreground))'
+                        },
+                        ring: 'hsl(var(--ring))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --border: 214.3 31.8% 91.4%;
+            --ring: 221.2 83.2% 53.3%;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: 222.2 84% 4.9%;
+                --foreground: 210 40% 98%;
+                --card: 222.2 84% 4.9%;
+                --card-foreground: 210 40% 98%;
+                --primary: 217.2 91.2% 59.8%;
+                --primary-foreground: 222.2 47.4% 11.2%;
+                --muted: 217.2 32.6% 17.5%;
+                --muted-foreground: 215 20.2% 65.1%;
+                --accent: 217.2 32.6% 17.5%;
+                --accent-foreground: 210 40% 98%;
+                --border: 217.2 32.6% 17.5%;
+                --ring: 224.3 76.3% 48%;
+            }
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            margin: 0;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .dark-invert {
+            filter: invert(0);
+        }
+        @media (prefers-color-scheme: dark) {
+            .dark-invert {
+                filter: invert(1);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../code/style.css">
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="flex-1">
+        <!-- 导航栏 -->
+        <nav class="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border" style="background-color:hsla(var(--background),0.95);">
+                    <div class="container mx-auto px-4">
+                        <div class="flex items-center justify-between h-16">
+                            <a class="flex items-center space-x-3 hover:opacity-80 transition-opacity pl-4 lg:pl-20" href="/">
+                                <img alt="Umi VPN Logo" width="20" height="20" src="../assets/image.jpg" class="flex-shrink-0 dark:invert" style="color:transparent" />
+                                <span class="text-lg font-medium">小陈同学-STUCDX</span>
+                            </a>
+                            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                                <a href="../index.html"              class="nav-link">网站首页</a>
+                            </div>
+                            <div class="flex items-center gap-2 px-2 lg:px-4">
+                                <!-- Theme Toggle -->
+                                <button id="theme-toggle" onclick="toggleTheme()" class="inline-flex items-center justify-center rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 w-8 bg-transparent border-0 cursor-pointer transition-colors" aria-label="切换主题">
+                                    <!-- Sun icon -->
+                                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                        <circle cx="12" cy="12" r="4"></circle>
+                                        <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                                        <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+                                        <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                                        <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+                                    </svg>
+                                    <!-- Moon icon -->
+                                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon hidden">
+                                        <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                                    </svg>
+                                </button>
+                                <!-- Language Switcher -->
+                                <div class="dropdown-wrapper">
+                                    <button onclick="toggleDropdown('lang-dropdown')" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 px-3 gap-1 bg-transparent border-0 cursor-pointer transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                            <path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path>
+                                            <path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path>
+                                        </svg>
+                                        <span class="hidden sm:inline">中文</span>
+                                    </button>
+                                    <div id="lang-dropdown" class="dropdown-menu">
+                                        <a href="/">English</a>
+                                        <a href="/zh">中文</a>
+                                    </div>
+                                </div>
+                                <!-- Login -->
+                                <a class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 font-extrabold transition-colors no-underline" href="/login">登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+        <!-- 隐私政策内容 -->
+        <main class="py-16 lg:py-24 bg-gradient-to-b from-background to-muted/30">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <h1 class="text-4xl lg:text-5xl font-bold mb-6 text-center text-foreground">隐私政策</h1>
+                <p class="text-lg text-muted-foreground mb-12 text-center">最后更新：2026年7月</p>
+                <div class="prose prose-lg dark:prose-invert max-w-none space-y-8">
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">介绍</h2>
+                        <p class="text-muted-foreground leading-relaxed">欢迎访问小陈同学-STUCDX的网站（以下简称"本网站"）。在访问和使用本网站前，请仔细阅读以下用户协议。您对本网站的任何访问和使用行为都将被视为对本协议全部内容的认可。</p>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">1. 网站性质</h2>
+                        <p class="text-muted-foreground leading-relaxed mb-4">本网站为个人所有并运营的展示性网站，主要用于展示个人项目和相关内容。本网站所有内容均由网站所有者独立管理，不开放第三方用户发布内容。</p>
+                        <p class="text-muted-foreground leading-relaxed mt-4">我们不收集其他个人信息，包括但不限于：浏览历史、IP 地址。</p>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">2. 内容说明</h2>
+                        <p class="text-muted-foreground leading-relaxed mb-4">2.1 本网站展示的所有项目、作品及相关内容均为我个人创作或合法获得授权的内容。</p>
+                        <p class="text-muted-foreground leading-relaxed mb-4">2.2 部分内容可能包含跳转至哔哩哔哩或蓝奏云、Github等第三方平台的链接，用于观看视频与下载文件、查看项目仓库。</p>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">3. 使用限制：</h2>
+                        <ul class="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                            <li>禁止对本网站内容进行任何形式的商业性使用</li>
+                            <li>禁止未经授权转载、复制或修改本网站内容</li>
+                            <li>禁止使用任何自动化工具访问本网站</li>
+                            <li>禁止任何可能干扰网站正常运行的恶意行为</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">4. 免责声明</h2>
+                        <p class="text-muted-foreground leading-relaxed">4.1 本网站内容按"原样"提供，不提供任何明示或暗示的保证。</p>
+                        <p class="text-muted-foreground leading-relaxed">4.2 对于通过本网站跳转至第三方平台(如哔哩哔哩、蓝奏云等)后产生的任何问题，本网站不承担任何责任。</p>
+                        <p class="text-muted-foreground leading-relaxed">4.3 本网站可能在不事先通知的情况下变更、暂停或终止部分或全部服务。</p>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">5. 隐私保护</h2>
+                        <p class="text-muted-foreground leading-relaxed">我们可能会不时更新本隐私政策。我们将通过在此页面上发布新的隐私政策并更新"最后更新"日期来通知您任何重大变更。我们鼓励您定期查看本隐私政策以了解任何变更。</p>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">联系我们</h2>
+                        <p class="text-muted-foreground leading-relaxed">5.1 本网站不会主动收集用户的个人信息，可能的情况包括但不限于：</p>
+                        <ul class="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                            <li>CloudFlare获取网站数据，以便改进本网站</li>
+                            <li>bilibili登录账号</li>
+                            <li>收集匿名访问数据，仅用于分析网站流量</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">6. 协议修改</h2>
+                        <p class="text-muted-foreground leading-relaxed">我保留随时修改本协议的权利，修改后的协议将在网站上公布后立即生效。</p>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 text-foreground">7. 法律适用</h2>
+                        <p class="text-muted-foreground leading-relaxed">本协议的解释、效力及纠纷的解决，均适用于中华人民共和国法律。</p>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+                <footer class="bg-muted/50 py-12">
+                    <div class="container mx-auto px-4 text-center">
+                        <div class="mb-6"><h3 class="text-2xl font-bold">小陈同学-STUCDX</h3></div>
+                        <p class="text-muted-foreground mb-6">最懂科学的天才，最有品味的坏蛋 ——弗兰熊</p>
+                        <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                            <a class="hover:text-foreground transition-colors no-underline" href="../doc/privacy.html">隐私政策</a>
+                            <!-- <a class="hover:text-foreground transition-colors no-underline" href="../doc/contact">联系我们</a> -->
+                            <a href="https://www.acgo.cn/person/5336808" target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors no-underline">个人主页</a>
+                        </div>
+                    </div>
+                </footer>
+        <script>
+        // Theme management
+        (function() {
+            const stored = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            } else if (stored === 'light') {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+            }
+            updateThemeIcons();
+        })();
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeIcons();
+        }
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            if (sunIcon && moonIcon) {
+                if (isDark) {
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                } else {
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                }
+            }
+        }
+
+        // Dropdown management
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            if (!dropdown) return;
+            const isOpen = dropdown.classList.contains('show');
+            // Close all dropdowns first
+            document.querySelectorAll('.dropdown-menu.show').forEach(function(d) {
+                d.classList.remove('show');
+            });
+            if (!isOpen) {
+                dropdown.classList.add('show');
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown-wrapper')) {
+                document.querySelectorAll('.dropdown-menu.show').forEach(function(d) {
+                    d.classList.remove('show');
+                });
+            }
+        });
+
+        // Close dropdowns on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.dropdown-menu.show').forEach(function(d) {
+                    d.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
