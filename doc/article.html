@@ -316,7 +316,7 @@
     // ========== 文章数据（包含真实图片URL和占位图片） ==========
     const articles = [
       { 
-        id: 1, 
+        id: "25e24",
         title: "免费服务器搭建网站", 
         excerpt: "365Webhost是一个提供免费虚拟主机和域名注册服务的网站", 
         category: "白嫖", 
@@ -381,9 +381,8 @@
           `;
           
           card.addEventListener('click', () => {
-            // 实际项目中跳转到文章详情页
-            window.location.href = `article.html?id=${article.id}`;
-          });
+                window.location.href = `/doc/article/${article.id}.html`;
+            });
           
           articlesGrid.appendChild(card);
         });
