@@ -1,103 +1,281 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>小陈同学-STUCDX | 隐私政策</title>
-
-    <!-- 结构化数据 -->
-    <script type="application/ld+json">
-        {"@context":"https://schema.org","@type":"WebSite","name":"UmiVPN","url":"https://www.umivpn.com","description":"UmiVPN - 安全、快速、私密 VPN。让上网更私密、更安全、更快速。","inLanguage":"zh-Hans"}
-    </script>
-    <script type="application/ld+json">
-        {"@context":"https://schema.org","@type":"Organization","name":"5V Network LLC","url":"https://www.umivpn.com","logo":"https://www.umivpn.com/umi-thick.svg"}
-    </script>
-
-    <!-- Tailwind CSS CDN 用于简化样式 -->
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        background: 'hsl(var(--background))',
-                        foreground: 'hsl(var(--foreground))',
-                        primary: {
-                            DEFAULT: 'hsl(var(--primary))',
-                            foreground: 'hsl(var(--primary-foreground))'
-                        },
-                        muted: {
-                            DEFAULT: 'hsl(var(--muted))',
-                            foreground: 'hsl(var(--muted-foreground))'
-                        },
-                        card: {
-                            DEFAULT: 'hsl(var(--card))',
-                            foreground: 'hsl(var(--card-foreground))'
-                        },
-                        border: 'hsl(var(--border))',
-                        accent: {
-                            DEFAULT: 'hsl(var(--accent))',
-                            foreground: 'hsl(var(--accent-foreground))'
-                        },
-                        ring: 'hsl(var(--ring))',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        :root {
-            --background: 0 0% 100%;
-            --foreground: 222.2 84% 4.9%;
-            --card: 0 0% 100%;
-            --card-foreground: 222.2 84% 4.9%;
-            --primary: 221.2 83.2% 53.3%;
-            --primary-foreground: 210 40% 98%;
-            --muted: 210 40% 96.1%;
-            --muted-foreground: 215.4 16.3% 46.9%;
-            --accent: 210 40% 96.1%;
-            --accent-foreground: 222.2 47.4% 11.2%;
-            --border: 214.3 31.8% 91.4%;
-            --ring: 221.2 83.2% 53.3%;
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --background: 222.2 84% 4.9%;
-                --foreground: 210 40% 98%;
-                --card: 222.2 84% 4.9%;
-                --card-foreground: 210 40% 98%;
-                --primary: 217.2 91.2% 59.8%;
-                --primary-foreground: 222.2 47.4% 11.2%;
-                --muted: 217.2 32.6% 17.5%;
-                --muted-foreground: 215 20.2% 65.1%;
-                --accent: 217.2 32.6% 17.5%;
-                --accent-foreground: 210 40% 98%;
-                --border: 217.2 32.6% 17.5%;
-                --ring: 224.3 76.3% 48%;
-            }
-        }
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: hsl(var(--background));
-            color: hsl(var(--foreground));
-            margin: 0;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .dark-invert {
-            filter: invert(0);
-        }
-        @media (prefers-color-scheme: dark) {
-            .dark-invert {
-                filter: invert(1);
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="../code/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>文档 | 小陈同学-STUCDX</title>
+  <meta name="description" content="小陈同学-STUCDX 的文章页面，分享技术、思考与生活。" />
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))',
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))',
+            },
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))',
+            },
+            border: 'hsl(var(--border))',
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))',
+            },
+            ring: 'hsl(var(--ring))',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --primary: 221.2 83.2% 53.3%;
+      --primary-foreground: 210 40% 98%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --border: 214.3 31.8% 91.4%;
+      --ring: 221.2 83.2% 53.3%;
+    }
+    .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
+      --primary: 217.2 91.2% 59.8%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
+      --border: 217.2 32.6% 17.5%;
+      --ring: 224.3 76.3% 48%;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .nav-link {
+      color: hsl(var(--muted-foreground));
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+    .nav-link:hover {
+      color: hsl(var(--foreground));
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      z-index: 60;
+      min-width: 160px;
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: 0.5rem;
+      top: 100%;
+      margin-top: 0.25rem;
+      right: 0;
+    }
+    .dropdown-menu.show {
+      display: block;
+    }
+    .dropdown-menu a,
+    .dropdown-menu button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: hsl(var(--foreground));
+      transition: background-color 0.15s;
+      white-space: nowrap;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+      background-color: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+    .dropdown-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .lucide-icon {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    
+    /* ========== 文章排版样式（修复图片问题） ========== */
+    .article-content {
+      max-width: 100%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .article-content h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      color: hsl(var(--foreground));
+    }
+    .article-content h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      border-left: 4px solid hsl(var(--primary));
+      padding-left: 1rem;
+      color: hsl(var(--foreground));
+    }
+    .article-content h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: hsl(var(--foreground));
+    }
+    .article-content p {
+      margin-bottom: 1.25rem;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: hsl(var(--foreground));
+    }
+    .article-content ul, .article-content ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.8rem;
+      line-height: 1.8;
+    }
+    .article-content li {
+      margin-bottom: 0.4rem;
+    }
+    .article-content blockquote {
+      border-left: 4px solid hsl(var(--primary));
+      background-color: hsl(var(--muted));
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 0.5rem 0.5rem 0;
+      font-style: italic;
+      color: hsl(var(--muted-foreground));
+    }
+    .article-content a {
+      color: hsl(var(--primary));
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    .article-content a:hover {
+      opacity: 0.8;
+    }
+    
+    /* ========== 关键修复：图片样式 ========== */
+    .article-content img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      margin: 1.5rem auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    /* 图片容器：包裹图片和说明文字 */
+    .article-content figure {
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .article-content figure img {
+      margin: 0 auto 0.5rem;
+    }
+    .article-content figcaption {
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+      font-style: italic;
+    }
+    
+    /* 代码样式 */
+    .article-content code {
+      background-color: hsl(var(--muted));
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      font-size: 0.9rem;
+      font-family: 'Fira Code', monospace;
+      word-break: break-all;
+    }
+    .article-content pre {
+      background-color: hsl(var(--muted));
+      padding: 1rem;
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      max-width: 100%;
+    }
+    .article-content pre code {
+      background: none;
+      padding: 0;
+      word-break: normal;
+    }
+    
+    /* 表格样式（如果文章中有表格） */
+    .article-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .article-content th,
+    .article-content td {
+      border: 1px solid hsl(var(--border));
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    .article-content th {
+      background-color: hsl(var(--muted));
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <div class="flex-1">
+  <script type="application/ld+json">
+    {
+      "@context": "",
+      "@type": "Article",
+      "headline": "构建个人知识库：从混乱到有序的思考",
+      "author": { "@type": "Person", "name": "小陈同学-STUCDX" },
+      "datePublished": "2026-07-17",
+      "description": "关于技术、学习与日常的深度文章。",
+      "image": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=400&fit=crop"
+    }
+  </script>
+
+  <div class="flex min-h-full flex-1">
+    <div id="left-rail" class="hidden xl:block w-0 xl:w-[160px] flex-shrink-0"></div>
+
+    <div class="min-w-0 flex-1 flex flex-col">
+      <main class="flex-1">
+        <!-- 导航栏 -->
           <nav class="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border" style="background-color:hsla(var(--background),0.95);">
                     <div class="container mx-auto px-4">
                         <div class="flex items-center justify-between h-16">
@@ -107,7 +285,6 @@
                             </a>
                             <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
                                 <a href="/index.html"              class="nav-link">网站首页</a>
-                                <a href="/doc/article.html"              class="nav-link">文章列表</a>
                             </div>
                             <div class="flex items-center gap-2 px-2 lg:px-4">
                                 <!-- Theme Toggle -->
@@ -140,10 +317,36 @@
                     </div>
                 </nav>
 
-        <!-- 隐私政策内容 -->
-        <main class="py-16 lg:py-24 bg-gradient-to-b from-background to-muted/30">
-            <div class="container mx-auto px-4 max-w-4xl">
-                <h1 class="text-4xl lg:text-5xl font-bold mb-6 text-center text-foreground">隐私政策</h1>
+        <!-- 文章内容区域 -->
+        <article class="container mx-auto px-4 py-10 max-w-3xl">
+          <!-- 文章头部元信息 -->
+          <div class="mb-8">
+            <div class="flex items-center gap-3 text-sm text-muted-foreground mb-4">
+              <span class="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs font-medium">技术随笔</span>
+              <span>2026年7月17日</span>
+              <span>·</span>
+              <span>阅读约 3 分钟</span>
+            </div>
+            <h1 class="text-4xl font-extrabold tracking-tight mb-4">免费服务器搭建网站</h1>
+            <div class="flex items-center gap-3 text-muted-foreground">
+              <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold">陈</div>
+              <span class="text-sm">小陈同学-STUCDX</span>
+            </div>
+          </div>
+
+          <!-- 特色图片（使用 figure 标签包裹） -->
+          <figure class="mb-10">
+            <img 
+              src="https://onemouse.indevs.in/25e24/article_cover.png" 
+              alt="个人知识库封面图" 
+              class="w-full rounded-xl"
+              loading="lazy"
+            />
+          </figure>
+
+          <!-- 正文内容 -->
+          <div class="article-content">
+<h1 class="text-4xl lg:text-5xl font-bold mb-6 text-center text-foreground">隐私政策</h1>
                 <p class="text-lg text-muted-foreground mb-12 text-center">最后更新：2026年7月</p>
                 <div class="prose prose-lg dark:prose-invert max-w-none space-y-8">
                     <section>
@@ -196,10 +399,10 @@
                         <h2 class="text-2xl font-semibold mb-4 text-foreground">7. 法律适用</h2>
                         <p class="text-muted-foreground leading-relaxed">本协议的解释、效力及纠纷的解决，均适用于中华人民共和国法律。</p>
                     </section>
-                </div>
-            </div>
-        </main>
-    </div>
+        </article>
+      </main>
+
+      <!-- 页脚 -->
       <footer class="bg-muted/50 py-12 mt-auto">
         <div class="container mx-auto px-4 text-center">
           <div class="mb-6"><h3 class="text-2xl font-bold">小陈同学-STUCDX</h3></div>
@@ -210,81 +413,76 @@
           </div>
         </div>
       </footer>
-        <script>
-        // Theme management
-        (function() {
-            const stored = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (stored === 'dark' || (!stored && prefersDark)) {
-                document.documentElement.classList.add('dark');
-                document.documentElement.classList.remove('light');
-            } else if (stored === 'light') {
-                document.documentElement.classList.add('light');
-                document.documentElement.classList.remove('dark');
-            }
-            updateThemeIcons();
-        })();
+    </div>
 
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.contains('dark');
-            if (isDark) {
-                document.documentElement.classList.remove('dark');
-                document.documentElement.classList.add('light');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                document.documentElement.classList.remove('light');
-                localStorage.setItem('theme', 'dark');
-            }
-            updateThemeIcons();
+    <div id="right-rail" class="hidden xl:block w-0 xl:w-[160px] flex-shrink-0"></div>
+  </div>
+
+  <!-- 脚本 -->
+  <script>
+    (function() {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else if (stored === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+      updateThemeIcons();
+    })();
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+      }
+      updateThemeIcons();
+    }
+
+    function updateThemeIcons() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const sunIcon = document.getElementById('sun-icon');
+      const moonIcon = document.getElementById('moon-icon');
+      if (sunIcon && moonIcon) {
+        if (isDark) {
+          sunIcon.classList.add('hidden');
+          moonIcon.classList.remove('hidden');
+        } else {
+          sunIcon.classList.remove('hidden');
+          moonIcon.classList.add('hidden');
         }
+      }
+    }
 
-        function updateThemeIcons() {
-            const isDark = document.documentElement.classList.contains('dark');
-            const sunIcon = document.getElementById('sun-icon');
-            const moonIcon = document.getElementById('moon-icon');
-            if (sunIcon && moonIcon) {
-                if (isDark) {
-                    sunIcon.classList.add('hidden');
-                    moonIcon.classList.remove('hidden');
-                } else {
-                    sunIcon.classList.remove('hidden');
-                    moonIcon.classList.add('hidden');
-                }
-            }
-        }
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      if (!dropdown) return;
+      const isOpen = dropdown.classList.contains('show');
+      document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+      if (!isOpen) {
+        dropdown.classList.add('show');
+      }
+    }
 
-        // Dropdown management
-        function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            if (!dropdown) return;
-            const isOpen = dropdown.classList.contains('show');
-            // Close all dropdowns first
-            document.querySelectorAll('.dropdown-menu.show').forEach(function(d) {
-                d.classList.remove('show');
-            });
-            if (!isOpen) {
-                dropdown.classList.add('show');
-            }
-        }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.dropdown-wrapper')) {
+        document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+      }
+    });
 
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.dropdown-wrapper')) {
-                document.querySelectorAll('.dropdown-menu.show').forEach(function(d) {
-                    d.classList.remove('show');
-                });
-            }
-        });
-
-        // Close dropdowns on Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.dropdown-menu.show').forEach(function(d) {
-                    d.classList.remove('show');
-                });
-            }
-        });
-    </script>
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+      }
+    });
+  </script>
 </body>
 </html>
