@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-  <title>文档 · 小陈同学-STUCDX</title>
+  <title>文章标题 · 小陈同学-STUCDX</title>
   <meta name="description" content="小陈同学-STUCDX 的文章页面，分享技术、思考与生活。" />
-  <!-- 沿用原有风格：Tailwind + 自定义配色 -->
   <script src="https://cdn.tailwindcss.com">
   </script>
   <script>
@@ -129,7 +128,13 @@
       display: inline-block;
       vertical-align: middle;
     }
-    /* 文章排版样式 */
+    
+    /* ========== 文章排版样式（修复图片问题） ========== */
+    .article-content {
+      max-width: 100%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
     .article-content h1 {
       font-size: 2.25rem;
       font-weight: 700;
@@ -185,19 +190,39 @@
     .article-content a:hover {
       opacity: 0.8;
     }
+    
+    /* ========== 关键修复：图片样式 ========== */
     .article-content img {
+      display: block;
       max-width: 100%;
       height: auto;
       border-radius: 0.75rem;
-      margin: 1.5rem 0;
+      margin: 1.5rem auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
+    
+    /* 图片容器：包裹图片和说明文字 */
+    .article-content figure {
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .article-content figure img {
+      margin: 0 auto 0.5rem;
+    }
+    .article-content figcaption {
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+      font-style: italic;
+    }
+    
+    /* 代码样式 */
     .article-content code {
       background-color: hsl(var(--muted));
       padding: 0.2rem 0.5rem;
       border-radius: 0.3rem;
       font-size: 0.9rem;
       font-family: 'Fira Code', monospace;
+      word-break: break-all;
     }
     .article-content pre {
       background-color: hsl(var(--muted));
@@ -205,36 +230,52 @@
       border-radius: 0.75rem;
       overflow-x: auto;
       margin: 1.5rem 0;
+      max-width: 100%;
     }
     .article-content pre code {
       background: none;
       padding: 0;
+      word-break: normal;
+    }
+    
+    /* 表格样式（如果文章中有表格） */
+    .article-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .article-content th,
+    .article-content td {
+      border: 1px solid hsl(var(--border));
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    .article-content th {
+      background-color: hsl(var(--muted));
+      font-weight: 600;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
-  <!-- 结构化数据 -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Article",
-      "headline": "小陈同学的思考与分享",
-      "author": {
-        "@type": "Person",
-        "name": "小陈同学-STUCDX"
-      },
+      "headline": "构建个人知识库：从混乱到有序的思考",
+      "author": { "@type": "Person", "name": "小陈同学-STUCDX" },
       "datePublished": "2026-07-17",
-      "description": "关于技术、学习与日常的深度文章。"
+      "description": "关于技术、学习与日常的深度文章。",
+      "image": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=400&fit=crop"
     }
   </script>
 
   <div class="flex min-h-full flex-1">
-    <!-- 左栏广告占位 -->
     <div id="left-rail" class="hidden xl:block w-0 xl:w-[160px] flex-shrink-0"></div>
 
     <div class="min-w-0 flex-1 flex flex-col">
       <main class="flex-1">
-        <!-- 导航栏：完全复用原有样式 -->
+        <!-- 导航栏 -->
         <nav class="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border" style="background-color:hsla(var(--background),0.95);">
           <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
@@ -284,13 +325,18 @@
             </div>
           </div>
 
-          <!-- 特色图片（可选） -->
-          <div class="rounded-xl bg-muted/50 h-48 md:h-64 flex items-center justify-center mb-10 text-muted-foreground border border-border">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M8 2v20"/><path d="M2 8h20"/></svg>
-            <img src="https://onemouse.indevs.in/25e24/article_cover.png"
-          </div>
+          <!-- 特色图片（使用 figure 标签包裹） -->
+          <figure class="mb-10">
+            <img 
+              src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=400&fit=crop" 
+              alt="个人知识库封面图" 
+              class="w-full rounded-xl"
+              loading="lazy"
+            />
+            <figcaption>图片来源：Unsplash</figcaption>
+          </figure>
 
-          <!-- 正文内容（示例文章） -->
+          <!-- 正文内容 -->
           <div class="article-content">
             <p>365Webhost是一个提供免费虚拟主机和域名注册服务的网站,
             它允许用户在其平台上创建和托管网站，而无需支付任何费用,
@@ -318,7 +364,7 @@
         </article>
       </main>
 
-      <!-- 页脚：与原始一致 -->
+      <!-- 页脚 -->
       <footer class="bg-muted/50 py-12 mt-auto">
         <div class="container mx-auto px-4 text-center">
           <div class="mb-6"><h3 class="text-2xl font-bold">小陈同学-STUCDX</h3></div>
@@ -331,11 +377,10 @@
       </footer>
     </div>
 
-    <!-- 右栏广告占位 -->
     <div id="right-rail" class="hidden xl:block w-0 xl:w-[160px] flex-shrink-0"></div>
   </div>
 
-  <!-- 脚本：主题与下拉菜单 -->
+  <!-- 脚本 -->
   <script>
     (function() {
       const stored = localStorage.getItem('theme');
