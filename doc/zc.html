@@ -3,153 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase 免费注册登录</title>
-    <!-- 引入 Supabase JS 库 -->
+    <title>Supabase 注册登录</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
+        body { font-family: Arial; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .group { margin-bottom: 15px; }
         input { width: 100%; padding: 10px; box-sizing: border-box; }
-        button { padding: 10px 20px; cursor: pointer; background: #0070f3; color: white; border: none; border-radius: 5px; }
+        button { padding: 10px 20px; background: #0070f3; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
         .hidden { display: none; }
-        #message { color: red; margin-top: 10px; }
+        .msg { margin-top: 10px; color: red; }
         .success { color: green; }
     </style>
 </head>
 <body>
 
-    <!-- ===== 未登录时显示：注册 & 登录表单 ===== -->
-    <div id="auth-container">
+    <!-- ===== 未登录界面 ===== -->
+    <div id="auth-box">
         <h2>注册</h2>
-        <div class="form-group">
-            <input type="email" id="reg-email" placeholder="请输入邮箱">
+        <div class="group">
+            <input type="email" id="regEmail" placeholder="邮箱">
         </div>
-        <div class="form-group">
-            <input type="password" id="reg-password" placeholder="请输入密码（至少6位）">
+        <div class="group">
+            <input type="password" id="regPassword" placeholder="密码（≥6位）">
         </div>
-        <button onclick="handleSignUp()">注册</button>
+        <button id="regBtn">注册</button>
 
-        <hr style="margin: 30px 0;">
+        <hr>
 
         <h2>登录</h2>
-        <div class="form-group">
-            <input type="email" id="login-email" placeholder="请输入邮箱">
+        <div class="group">
+            <input type="email" id="loginEmail" placeholder="邮箱">
         </div>
-        <div class="form-group">
-            <input type="password" id="login-password" placeholder="请输入密码">
+        <div class="group">
+            <input type="password" id="loginPassword" placeholder="密码">
         </div>
-        <button onclick="handleSignIn()">登录</button>
-        <div id="message"></div>
+        <button id="loginBtn">登录</button>
+        <div id="msg" class="msg"></div>
     </div>
 
-    <!-- ===== 登录成功后显示：用户信息 & 退出按钮 ===== -->
-    <div id="user-container" class="hidden">
+    <!-- ===== 登录成功界面 ===== -->
+    <div id="user-box" class="hidden">
         <h2>✅ 已登录</h2>
-        <p>欢迎，<span id="user-email"></span>！</p>
-        <button onclick="handleSignOut()">退出登录</button>
-        <div id="user-message"></div>
+        <p>欢迎，<span id="userEmail"></span>！</p>
+        <button id="logoutBtn">退出登录</button>
+        <div id="userMsg" class="msg"></div>
     </div>
 
     <script>
-        // ================= 1. 初始化 Supabase =================
-        // ⚠️ 重要：请务必替换成你在后台重新生成的新 anon 密钥！
-        const supabaseUrl = 'https://yruzwtugitxfmflbtdfp.supabase.co';
-        const supabaseKey = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        // ========== 1. 唯一初始化（只声明一次） ==========
+        const SUPABASE_URL = 'https://yruzwtugitxfmflbtdfp.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m';   // ⚠️ 务必更换！
 
-        // ================= 2. 核心函数 =================
-        // 注册
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ========== 2. 工具函数 ==========
+        function showMsg(element, text, isSuccess = false) {
+            element.textContent = text;
+            element.className = 'msg' + (isSuccess ? ' success' : '');
+        }
+
+        // 切换界面
+        function switchToUser(user) {
+            document.getElementById('auth-box').classList.add('hidden');
+            document.getElementById('user-box').classList.remove('hidden');
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        function switchToAuth() {
+            document.getElementById('auth-box').classList.remove('hidden');
+            document.getElementById('user-box').classList.add('hidden');
+        }
+
+        // ========== 3. 核心业务函数（挂载到 window 以便 onclick 调用，但这里改用监听器） ==========
         async function handleSignUp() {
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const msg = document.getElementById('message');
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const msgEl = document.getElementById('msg');
 
             if (!email || password.length < 6) {
-                msg.textContent = '请填写有效邮箱，且密码至少6位';
+                showMsg(msgEl, '请填写有效邮箱，且密码至少 6 位');
                 return;
             }
 
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
             if (error) {
-                msg.textContent = '❌ 注册失败：' + error.message;
+                showMsg(msgEl, '❌ 注册失败：' + error.message);
             } else {
-                msg.className = 'success';
-                msg.textContent = '✅ 注册成功！请查收邮箱点击确认链接（如未收到，请检查垃圾箱）。';
-                // 如果你的 Supabase 关闭了邮箱确认，则这里可以直接登录成功，页面会自动切换。
-                // 若开启了确认，用户点击确认邮件后，刷新页面或再次登录即可。
+                showMsg(msgEl, '✅ 注册成功！已自动登录（若未自动跳转，请稍后重试）', true);
+                // 注册成功后，用当前会话直接切换界面
+                await checkSession();   // 尝试自动登录
             }
         }
 
-        // 登录
         async function handleSignIn() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const msg = document.getElementById('message');
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const msgEl = document.getElementById('msg');
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+            if (!email || !password) {
+                showMsg(msgEl, '请填写完整');
+                return;
+            }
 
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
-                msg.textContent = '❌ 登录失败：' + error.message;
+                showMsg(msgEl, '❌ 登录失败：' + error.message);
             } else {
-                msg.className = 'success';
-                msg.textContent = '✅ 登录成功！';
-                // 登录成功后，获取会话并切换界面
-                await checkUser();
+                showMsg(msgEl, '✅ 登录成功！', true);
+                await checkSession();
             }
         }
 
-        // 退出登录
         async function handleSignOut() {
-            await supabase.auth.signOut();
-            // 切换回登录界面
-            document.getElementById('auth-container').classList.remove('hidden');
-            document.getElementById('user-container').classList.add('hidden');
-            document.getElementById('message').textContent = '已退出';
-            document.getElementById('message').className = '';
+            await supabaseClient.auth.signOut();
+            switchToAuth();
+            document.getElementById('msg').textContent = '已退出';
+            document.getElementById('msg').className = 'msg';
         }
 
-        // ================= 3. 检查当前用户会话（页面加载时自动执行） =================
-        async function checkUser() {
-            const { data: { session }, error } = await supabase.auth.getSession();
-
+        // 检查当前会话
+        async function checkSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) {
-                // 已登录：显示用户界面
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('user-container').classList.remove('hidden');
-                document.getElementById('user-email').textContent = session.user.email;
-                // 清除登录框里的提示信息
-                document.getElementById('message').textContent = '';
+                switchToUser(session.user);
             } else {
-                // 未登录：显示登录注册界面
-                document.getElementById('auth-container').classList.remove('hidden');
-                document.getElementById('user-container').classList.add('hidden');
+                switchToAuth();
             }
         }
 
-        // 页面加载时检查登录状态
-        window.onload = function() {
-            checkUser();
+        // ========== 4. 绑定事件（避免 onclick 污染全局） ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // 注册按钮
+            document.getElementById('regBtn').addEventListener('click', handleSignUp);
+            // 登录按钮
+            document.getElementById('loginBtn').addEventListener('click', handleSignIn);
+            // 退出按钮
+            document.getElementById('logoutBtn').addEventListener('click', handleSignOut);
 
-            // 监听认证状态变化（比如用户在新标签页退出登录，本页面会自动感知）
-            supabase.auth.onAuthStateChange((event, session) => {
+            // 初始检查
+            checkSession();
+
+            // 监听认证状态变化（例如在其他页面退出）
+            supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (event === 'SIGNED_IN' && session) {
-                    document.getElementById('auth-container').classList.add('hidden');
-                    document.getElementById('user-container').classList.remove('hidden');
-                    document.getElementById('user-email').textContent = session.user.email;
-                }
-                if (event === 'SIGNED_OUT') {
-                    document.getElementById('auth-container').classList.remove('hidden');
-                    document.getElementById('user-container').classList.add('hidden');
+                    switchToUser(session.user);
+                } else if (event === 'SIGNED_OUT') {
+                    switchToAuth();
                 }
             });
-        };
+        });
     </script>
 </body>
 </html>
