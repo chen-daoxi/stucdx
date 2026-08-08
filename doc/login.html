@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 / 注册</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+            padding: 40px 36px;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        /* ===== Tab 切换按钮 ===== */
+        .tabs {
+            display: flex;
+            margin-bottom: 28px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: 500;
+            color: #9aa6b5;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: #0070f3;
+            border-bottom-color: #0070f3;
+        }
+
+        .tab-btn:hover {
+            color: #0070f3;
+        }
+
+        /* ===== 表单容器 ===== */
+        .form-panel {
+            display: none;
+        }
+
+        .form-panel.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1f2a3a;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5a6e;
+            margin-bottom: 5px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: #f5f7fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #1f2a3a;
+            transition: border 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #0070f3;
+            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.15);
+            background-color: #ffffff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #0070f3;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 6px;
+        }
+
+        .btn:hover {
+            background-color: #005bb5;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #0070f3;
+            border: 1px solid #0070f3;
+            margin-top: 0;
+        }
+
+        .btn-outline:hover {
+            background-color: #e6f0ff;
+        }
+
+        .message {
+            margin-top: 16px;
+            font-size: 14px;
+            text-align: center;
+            min-height: 22px;
+            color: #e53e3e;
+        }
+
+        .message.success {
+            color: #38a169;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .user-info {
+            text-align: center;
+        }
+
+        .user-info p {
+            font-size: 16px;
+            color: #2d3748;
+            margin: 12px 0 24px;
+        }
+
+        .user-info .email {
+            font-weight: 600;
+            color: #0070f3;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- ===== Tab 切换 ===== -->
+        <div class="tabs">
+            <button class="tab-btn active" data-target="login">登录</button>
+            <button class="tab-btn" data-target="register">注册</button>
+        </div>
+
+        <!-- ===== 登录面板 ===== -->
+        <div id="login-panel" class="form-panel active">
+            <h2>登录</h2>
+            <div class="form-group">
+                <label>邮箱地址</label>
+                <input type="email" id="loginEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="loginPassword" placeholder="输入密码">
+            </div>
+            <button class="btn" id="loginBtn">登录</button>
+            <div id="loginMsg" class="message"></div>
+        </div>
+
+        <!-- ===== 注册面板 ===== -->
+        <div id="register-panel" class="form-panel">
+            <h2>创建账号</h2>
+            <div class="form-group">
+                <label>邮箱地址</label>
+                <input type="email" id="regEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="regPassword" placeholder="至少 6 位">
+            </div>
+            <button class="btn" id="regBtn">注册</button>
+            <div id="regMsg" class="message"></div>
+        </div>
+
+        <!-- ===== 登录成功后的用户面板 ===== -->
+        <div id="user-panel" class="hidden user-info">
+            <h2>✅ 已登录</h2>
+            <p>欢迎，<span class="email" id="userEmail"></span>！</p>
+            <button class="btn btn-outline" id="logoutBtn" style="width: auto; padding: 8px 24px;">退出登录</button>
+            <div id="userMsg" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========== Supabase 初始化 ==========
+        const SUPABASE_URL = 'https://yruzwtugitxfmflbtdfp.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m';   // ⚠️ 务必更换！
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ========== DOM 元素 ==========
+        const loginPanel = document.getElementById('login-panel');
+        const registerPanel = document.getElementById('register-panel');
+        const userPanel = document.getElementById('user-panel');
+        const loginMsg = document.getElementById('loginMsg');
+        const regMsg = document.getElementById('regMsg');
+        const userMsg = document.getElementById('userMsg');
+
+        // ========== Tab 切换 ==========
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const panels = {
+            login: loginPanel,
+            register: registerPanel
+        };
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 移除所有 active
+                tabBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // 隐藏所有面板
+                Object.values(panels).forEach(p => p.classList.remove('active'));
+                // 显示目标面板
+                const target = this.dataset.target;
+                panels[target].classList.add('active');
+
+                // 清空对应消息
+                if (target === 'login') loginMsg.textContent = '';
+                else regMsg.textContent = '';
+            });
+        });
+
+        // ========== 工具函数 ==========
+        function showMsg(element, text, isSuccess = false) {
+            element.textContent = text;
+            element.className = 'message' + (isSuccess ? ' success' : '');
+        }
+
+        function switchToUser(user) {
+            loginPanel.classList.remove('active');
+            registerPanel.classList.remove('active');
+            userPanel.classList.remove('hidden');
+            document.getElementById('userEmail').textContent = user.email;
+            // 隐藏tab按钮（可选，让界面更干净）
+            document.querySelector('.tabs').classList.add('hidden');
+        }
+
+        function switchToAuth() {
+            userPanel.classList.add('hidden');
+            document.querySelector('.tabs').classList.remove('hidden');
+            // 默认显示登录面板
+            loginPanel.classList.add('active');
+            registerPanel.classList.remove('active');
+            tabBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector('.tab-btn[data-target="login"]').classList.add('active');
+            // 清空所有消息
+            loginMsg.textContent = '';
+            regMsg.textContent = '';
+            userMsg.textContent = '';
+        }
+
+        // ========== 核心业务 ==========
+        async function handleSignUp() {
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!email || password.length < 6) {
+                showMsg(regMsg, '请填写有效邮箱，且密码至少 6 位');
+                return;
+            }
+
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                showMsg(regMsg, '❌ 注册失败：' + error.message);
+            } else {
+                showMsg(regMsg, '✅ 注册成功！正在自动登录...', true);
+                await checkSession();
+            }
+        }
+
+        async function handleSignIn() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMsg(loginMsg, '请填写完整');
+                return;
+            }
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                showMsg(loginMsg, '❌ 登录失败：' + error.message);
+            } else {
+                showMsg(loginMsg, '✅ 登录成功！', true);
+                await checkSession();
+            }
+        }
+
+        async function handleSignOut() {
+            await supabaseClient.auth.signOut();
+            switchToAuth();
+            loginMsg.textContent = '已退出';
+            loginMsg.className = 'message';
+        }
+
+        async function checkSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user) {
+                switchToUser(session.user);
+            } else {
+                switchToAuth();
+            }
+        }
+
+        // ========== 事件绑定 ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('regBtn').addEventListener('click', handleSignUp);
+            document.getElementById('loginBtn').addEventListener('click', handleSignIn);
+            document.getElementById('logoutBtn').addEventListener('click', handleSignOut);
+
+            checkSession();
+
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    switchToUser(session.user);
+                } else if (event === 'SIGNED_OUT') {
+                    switchToAuth();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
