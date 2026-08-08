@@ -1,372 +1,1555 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录 / 注册</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>注册 / 登录 - 幸运性别转盘</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
     <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text: #1a1a1a;
+            --subtext: #6b7280;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --error-border: #fecaca;
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --border: #e5e7eb;
+            --input-bg: #f9fafb;
+            --input-border: #d1d5db;
+            --input-focus-border: #2563eb;
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             padding: 20px;
+            color: var(--text);
+            user-select: none;
+            line-height: 1.5;
+            overflow-x: hidden;
         }
-
-        .card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
-            padding: 40px 36px;
-            max-width: 420px;
+        .container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 28px 32px 32px;
             width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid var(--border);
+            position: relative;
+            z-index: 10;
         }
-
-        /* ===== Tab 切换按钮 ===== */
+        /* Tab 切换 */
         .tabs {
             display: flex;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #e2e8f0;
         }
-
         .tab-btn {
             flex: 1;
             padding: 10px 0;
             background: none;
             border: none;
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 16px;
+            font-weight: 600;
             color: #9aa6b5;
             cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
+            transition: 0.2s;
             border-bottom: 3px solid transparent;
             margin-bottom: -2px;
+            letter-spacing: 0.02em;
         }
-
         .tab-btn.active {
-            color: #0070f3;
-            border-bottom-color: #0070f3;
+            color: var(--accent);
+            border-bottom-color: var(--accent);
         }
-
         .tab-btn:hover {
-            color: #0070f3;
+            color: var(--accent);
+        }
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+        .header-area {
+            margin-bottom: 20px;
+        }
+        .main-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #111827;
+        }
+        .sub-title {
+            font-size: 0.85em;
+            color: var(--subtext);
+        }
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            transition: 0.35s;
+            background: #f3f4f6;
+            color: #9ca3af;
+            border: 2px solid #e5e7eb;
+        }
+        .step-dot.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .step-dot.done {
+            background: var(--success);
+            color: #fff;
+            border-color: var(--success);
+        }
+        .step-line {
+            width: 22px;
+            height: 2px;
+            background: #e5e7eb;
+            transition: 0.35s;
+        }
+        .step-line.done {
+            background: var(--success);
         }
 
-        /* ===== 表单容器 ===== */
-        .form-panel {
+        .wheel-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 0 auto 14px;
+            cursor: pointer;
+        }
+        .wheel-wrapper.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        canvas#wheelCanvas {
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 0 0 6px #f9fafb, 0 0 0 8px #e5e7eb;
+            transition: box-shadow 0.4s;
+            background: #fff;
+        }
+        canvas#wheelCanvas.glow-success {
+            box-shadow: 0 0 28px rgba(22, 163, 74, 0.4), 0 0 0 6px #f0fdf4, 0 0 0 8px #bbf7d0;
+        }
+        canvas#wheelCanvas.glow-fail {
+            box-shadow: 0 0 24px rgba(220, 38, 38, 0.35), 0 0 0 6px #fef2f2, 0 0 0 8px #fecaca;
+            animation: shake 0.55s;
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+            10% {
+                transform: translateX(-6px)
+            }
+            20% {
+                transform: translateX(6px)
+            }
+            30% {
+                transform: translateX(-4px)
+            }
+            40% {
+                transform: translateX(4px)
+            }
+            50% {
+                transform: translateX(-2px)
+            }
+            60% {
+                transform: translateX(2px)
+            }
+            80% {
+                transform: translateX(-0.5px)
+            }
+        }
+        .spin-hint {
+            font-size: 0.78em;
+            color: var(--subtext);
+            margin-top: 6px;
+        }
+        .message-area {
+            min-height: 40px;
+            margin: 6px 0;
+        }
+        .message-box {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .message-box.error {
+            background: var(--error-bg);
+            color: var(--error);
+            border: 1px solid var(--error-border);
+        }
+        .message-box.success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+        .attempt-counter {
+            font-size: 0.73em;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+        .attempt-counter span {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .next-step-form {
+            display: none;
+            text-align: left;
+            padding: 0 2px;
+            margin-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 18px;
+            position: relative;
+        }
+        .next-step-form.visible {
+            display: block;
+            animation: fadeSlideUp 0.45s ease forwards;
+        }
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .form-group {
+            margin-bottom: 13px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.82em;
+            color: #374151;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            font-size: 0.9em;
+            outline: none;
+            transition: 0.25s;
+        }
+        .form-group input:focus {
+            border-color: var(--input-focus-border);
+            background: #fff;
+        }
+        .form-group input.input-error {
+            border-color: var(--error);
+            background: #fff;
+        }
+        .inline-error {
+            color: var(--error);
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-top: 4px;
+            display: none;
+            align-items: center;
+            gap: 3px;
+        }
+        .inline-error.visible {
+            display: flex;
+        }
+        .phone-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .phone-slider-container input[type="range"] {
+            flex: 1;
+            height: 7px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #2563eb, #93c5fd);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .phone-slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid #2563eb;
+        }
+        .phone-value {
+            font-weight: 700;
+            min-width: 100px;
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .btn-anchor {
+            position: relative;
+            min-height: 46px;
+            margin-top: 14px;
+        }
+        .btn-target-zone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 46px;
+            border: 3px dashed #2563eb;
+            border-radius: 10px;
+            background: rgba(37, 99, 235, 0.05);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 0.8em;
+            pointer-events: none;
+            animation: targetPulse 1.5s ease-in-out infinite;
+        }
+        .btn-target-zone.visible {
+            display: flex;
+        }
+        @keyframes targetPulse {
+            0%,
+            100% {
+                border-color: #2563eb;
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.2);
+            }
+            50% {
+                border-color: #1d4ed8;
+                box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+            }
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            position: relative;
+            z-index: 1;
+            font-family: inherit;
+        }
+        .btn-submit:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-submit.escaping {
+            position: fixed;
+            z-index: 7000;
+            cursor: grab;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.5);
+            animation: none;
+            width: auto;
+            padding: 14px 28px;
+            font-size: 1em;
+            transition: none;
+            pointer-events: auto;
+        }
+        .btn-submit.escaping:active {
+            cursor: grabbing;
+        }
+        .btn-submit.escaping:hover {
+            transform: none;
+        }
+
+        /* 登录面板 */
+        .login-panel-inner h2 {
+            font-size: 1.4em;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+        .login-panel-inner .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95em;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.25s;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+        .login-panel-inner .btn:hover {
+            background: var(--accent-hover);
+        }
+        .login-panel-inner .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            box-shadow: none;
+            margin-top: 0;
+        }
+        .login-panel-inner .btn-outline:hover {
+            background: #e6f0ff;
+        }
+        .login-panel-inner .message {
+            margin-top: 12px;
+            font-size: 0.82em;
+            text-align: center;
+            min-height: 20px;
+            color: #dc2626;
+        }
+        .login-panel-inner .message.success {
+            color: #16a34a;
+        }
+
+        /* 用户面板 */
+        .user-panel-inner {
+            text-align: center;
+        }
+        .user-panel-inner h2 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+        .user-panel-inner p {
+            font-size: 0.9em;
+            color: #374151;
+            margin: 8px 0 16px;
+        }
+        .user-panel-inner .email {
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .user-panel-inner .btn-outline {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #2563eb;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .user-panel-inner .btn-outline:hover {
+            background: #e6f0ff;
+        }
+        .user-panel-inner .message {
+            margin-top: 10px;
+            font-size: 0.8em;
+            min-height: 18px;
+            color: #dc2626;
+        }
+
+        .captcha-popup {
+            position: fixed;
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+            width: 280px;
+            display: none;
+            text-align: center;
+        }
+        .captcha-popup.visible {
+            display: block;
+        }
+        .captcha-slider-bg {
+            width: 100%;
+            height: 44px;
+            background: #e5e7eb;
+            border-radius: 22px;
+            position: relative;
+            margin: 15px 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .captcha-slider-fill {
+            height: 100%;
+            background: #2563eb;
+            border-radius: 22px;
+            width: 0%;
+            transition: width 0.1s linear;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .captcha-slider-thumb {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2563eb;
+            transition: left 0.1s linear;
+            z-index: 2;
+            user-select: none;
+        }
+        .captcha-hint {
+            font-size: 0.8em;
+            color: #6b7280;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .contract-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+        .contract-modal h3 {
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        .contract-terms {
+            font-size: 0.85em;
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+        .contract-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        .contract-checkbox input {
+            width: 20px;
+            height: 20px;
+            accent-color: #2563eb;
+        }
+        .contract-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .contract-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .top-toast {
+            position: fixed;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            z-index: 3000;
+            transition: top 0.5s ease;
+            white-space: nowrap;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            animation: confetti-fall linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1
+            }
+            100% {
+                transform: translateY(105vh) rotate(680deg);
+                opacity: 0
+            }
+        }
+
+        .final-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .final-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .final-modal {
+            background: white;
+            border-radius: 18px;
+            padding: 24px 22px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        .final-modal h3 {
+            margin-bottom: 6px;
+            color: #1e293b;
+            font-size: 1.1em;
+        }
+        .final-modal .step-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 14px;
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .final-modal input {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 2px solid #d1d5db;
+            font-size: 1em;
+            text-align: center;
+            outline: none;
+            margin: 8px 0;
+        }
+        .final-modal .digit-display {
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: #1e293b;
+            margin: 10px 0;
+        }
+        .final-modal .digit-display.hidden {
+            opacity: 0;
+        }
+        .final-modal .btn-confirm {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: none;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95em;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .final-input-area.hidden {
             display: none;
         }
 
-        .form-panel.active {
-            display: block;
-        }
-
-        h2 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #1f2a3a;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #4a5a6e;
-            margin-bottom: 5px;
-        }
-
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 14px;
-            background-color: #f5f7fa;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 15px;
-            color: #1f2a3a;
-            transition: border 0.2s, box-shadow 0.2s;
-            outline: none;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #0070f3;
-            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.15);
-            background-color: #ffffff;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #0070f3;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
+        .ad-popup {
+            position: fixed;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            z-index: 6000;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            margin-top: 6px;
+            font-weight: 700;
+            font-size: 1em;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: adBounce 0.5s ease;
+            word-break: break-word;
+            line-height: 1.4;
+            pointer-events: auto;
+            letter-spacing: 0.03em;
         }
-
-        .btn:hover {
-            background-color: #005bb5;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: #0070f3;
-            border: 1px solid #0070f3;
-            margin-top: 0;
-        }
-
-        .btn-outline:hover {
-            background-color: #e6f0ff;
-        }
-
-        .message {
-            margin-top: 16px;
+        .ad-close {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 28px;
+            height: 28px;
+            background: #ef4444;
+            color: #fff;
+            border-radius: 50%;
             font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.15s;
+        }
+        .ad-close:hover {
+            transform: scale(1.15);
+        }
+        @keyframes adBounce {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .drag-hint {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            z-index: 8000;
+            pointer-events: none;
+            display: none;
             text-align: center;
-            min-height: 22px;
-            color: #e53e3e;
+            font-size: 0.9em;
+            letter-spacing: 0.03em;
         }
-
-        .message.success {
-            color: #38a169;
+        .drag-hint.visible {
+            display: block;
         }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .user-info {
-            text-align: center;
-        }
-
-        .user-info p {
-            font-size: 16px;
-            color: #2d3748;
-            margin: 12px 0 24px;
-        }
-
-        .user-info .email {
-            font-weight: 600;
-            color: #0070f3;
-        }
-
-        @media (max-width: 480px) {
-            .card {
-                padding: 28px 20px;
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px 14px 22px;
+                border-radius: 16px;
+            }
+            canvas#wheelCanvas {
+                width: 260px;
+                height: 260px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <!-- ===== Tab 切换 ===== -->
-        <div class="tabs">
-            <button class="tab-btn active" data-target="login">登录</button>
-            <button class="tab-btn" data-target="register">注册</button>
+    <div class="container" id="mainContainer">
+        <!-- Tab 切换 -->
+        <div class="tabs" id="tabsBar">
+            <button class="tab-btn active" data-panel="registerPanel">注册</button>
+            <button class="tab-btn" data-panel="loginPanel">登录</button>
+        </div>
+
+        <!-- ===== 注册面板（恶搞） ===== -->
+        <div class="panel active" id="registerPanel">
+            <div class="header-area">
+                <div class="main-title">创建账号</div>
+                <div class="sub-title">请填写以下信息注册</div>
+            </div>
+            <div class="step-indicator">
+                <div class="step-dot active" id="stepDot1">1</div><div class="step-line" id="stepLine"></div>
+                <div class="step-dot" id="stepDot2">2</div><div class="step-line" id="stepLine2"></div>
+                <div class="step-dot" id="stepDot3">3</div>
+            </div>
+            <div class="wheel-wrapper" id="wheelWrapper">
+                <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);z-index:10;"><svg width="36" height="28"><polygon points="20,28 0,0 40,0" fill="#ef4444" stroke="#fff" stroke-width="1.2"/></svg></div>
+                <canvas id="wheelCanvas" width="300" height="300"></canvas>
+            </div>
+            <div class="spin-hint" id="spinHint">👆 点击转盘选择性别</div>
+            <div class="message-area" id="messageArea"></div>
+            <div class="attempt-counter" id="attemptCounter"></div>
+            <div class="next-step-form" id="nextStepForm">
+                <div style="text-align:center;margin-bottom:12px;"><span style="font-size:1.6em;">🎉</span><p style="color:#16a34a;font-weight:700;">性别选择成功：<strong>其他</strong> ✓</p></div>
+                <div class="form-group"><label>👤 用户名</label><input type="text" id="username" placeholder="请输入用户名"><div class="inline-error" id="usernameError">⛔ 该名字已被使用，请重试</div></div>
+                <div class="form-group"><label>📧 邮箱地址</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
+                <div class="form-group"><label>📱 手机号</label><div class="phone-slider-container"><input type="range" id="phoneSlider" min="12100000000" max="19900000000" value="16000000000" step="1"><span class="phone-value" id="phoneValue">160 0000 0000</span></div></div>
+                <div class="form-group"><label>🔒 密码</label><input type="password" id="regPassword" placeholder="至少8位"></div>
+                <div class="btn-anchor" id="btnAnchor">
+                    <div class="btn-target-zone" id="btnTargetZone">🎯 将按钮拖到此处</div>
+                    <button class="btn-submit" id="btnSubmit" disabled>🚀 完成注册</button>
+                </div>
+            </div>
         </div>
 
         <!-- ===== 登录面板 ===== -->
-        <div id="login-panel" class="form-panel active">
+        <div class="panel login-panel-inner" id="loginPanel">
             <h2>登录</h2>
-            <div class="form-group">
-                <label>邮箱地址</label>
-                <input type="email" id="loginEmail" placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-                <label>密码</label>
-                <input type="password" id="loginPassword" placeholder="输入密码">
-            </div>
+            <div class="form-group"><label>邮箱地址</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+            <div class="form-group"><label>密码</label><input type="password" id="loginPassword" placeholder="输入密码"></div>
             <button class="btn" id="loginBtn">登录</button>
             <div id="loginMsg" class="message"></div>
         </div>
 
-        <!-- ===== 注册面板 ===== -->
-        <div id="register-panel" class="form-panel">
-            <h2>创建账号</h2>
-            <div class="form-group">
-                <label>邮箱地址</label>
-                <input type="email" id="regEmail" placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-                <label>密码</label>
-                <input type="password" id="regPassword" placeholder="至少 6 位">
-            </div>
-            <button class="btn" id="regBtn">注册</button>
-            <div id="regMsg" class="message"></div>
-        </div>
-
-        <!-- ===== 登录成功后的用户面板 ===== -->
-        <div id="user-panel" class="hidden user-info">
-            <h2>✅ 已登录</h2>
-            <p>欢迎，<span class="email" id="userEmail"></span>！</p>
-            <button class="btn btn-outline" id="logoutBtn" style="width: auto; padding: 8px 24px;">退出登录</button>
+        <!-- ===== 用户面板 ===== -->
+        <div class="panel user-panel-inner" id="userPanel">
+            <h2>✅ 注册成功</h2>
+            <p>欢迎，<span class="email" id="userEmailDisplay"></span>！</p>
+            <p style="font-size:0.75em;color:#6b7280;">经过千辛万苦，您终于完成了注册</p>
+            <button class="btn-outline" id="logoutBtn">退出登录</button>
             <div id="userMsg" class="message"></div>
         </div>
     </div>
 
+    <!-- 人机验证滑块弹窗 -->
+    <div class="captcha-popup" id="captchaPopup"><strong>🤖 人机验证</strong><p style="font-size:0.8em;color:#64748b;">请拖动滑块到最右侧</p><div class="captcha-slider-bg" id="captchaSliderBg"><div class="captcha-slider-fill" id="captchaFill"></div><div class="captcha-slider-thumb" id="captchaThumb">➔</div></div><div class="captcha-hint" id="captchaHint">按住滑块拖动</div></div>
+
+    <!-- 契约弹窗 -->
+    <div class="overlay" id="contractOverlay"><div class="contract-modal"><h3>📜 灵魂绑定契约</h3><div class="contract-terms">请仔细阅读以下条款：<br><br>1. 您同意将灵魂永久绑定至本平台，不可撤销。<br>2. 您承诺每天至少登录一次，否则灵魂将自动进入"休眠"状态。<br>3. 平台有权在您睡眠时使用您的账户进行自动化操作。<br>4. 您放弃对个人数据的所有权利，包括但不限于梦境内容。<br>5. 您同意接收每日上限为999+封的系统通知邮件。<br>6. 您承认自己是Gay。<br>7. 若您试图注销账户，需提交纸质申请并附上公证材料。<br>8. 最终解释权归本平台所有，包括对"所有"的定义。<br></div><div class="contract-checkbox"><input type="checkbox" id="contractCheckbox"> 我已阅读并同意以上全部条款【✓】</div><button class="contract-btn" id="contractAgreeBtn" disabled>同意并继续</button></div></div>
+
+    <!-- 最终验证弹窗 -->
+    <div class="final-overlay" id="finalOverlay"><div class="final-modal" id="finalModal"></div></div>
+    <div class="top-toast" id="topToast">📸 内容已截图，契约生效</div>
+    <div class="drag-hint" id="dragHint">🖱️ 抓住注册按钮，把它拖回原来的位置！</div>
+    <div class="confetti-container" id="confettiContainer"></div>
+
     <script>
-        // ========== Supabase 初始化 ==========
-        const SUPABASE_URL = 'https://yruzwtugitxfmflbtdfp.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m';   // ⚠️ 务必更换！
+        (function() {
+            // ========== Supabase 初始化 ==========
+            const SUPABASE_URL = 'https://yruzwtugitxfmflbtdfp.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m'; 
+            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // ========== DOM 元素 ==========
+            const canvas = document.getElementById('wheelCanvas');
+            const ctx = canvas.getContext('2d');
+            const wheelWrapper = document.getElementById('wheelWrapper');
+            const spinHint = document.getElementById('spinHint');
+            const messageArea = document.getElementById('messageArea');
+            const attemptCounter = document.getElementById('attemptCounter');
+            const nextStepForm = document.getElementById('nextStepForm');
+            const stepDot1 = document.getElementById('stepDot1');
+            const stepDot2 = document.getElementById('stepDot2');
+            const stepDot3 = document.getElementById('stepDot3');
+            const stepLine = document.getElementById('stepLine');
+            const stepLine2 = document.getElementById('stepLine2');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnAnchor = document.getElementById('btnAnchor');
+            const btnTargetZone = document.getElementById('btnTargetZone');
+            const dragHint = document.getElementById('dragHint');
+            const inputUsername = document.getElementById('username');
+            const inputRegEmail = document.getElementById('regEmail');
+            const inputRegPassword = document.getElementById('regPassword');
+            const usernameError = document.getElementById('usernameError');
+            const phoneSlider = document.getElementById('phoneSlider');
+            const phoneValue = document.getElementById('phoneValue');
+            const confettiContainer = document.getElementById('confettiContainer');
+            const captchaPopup = document.getElementById('captchaPopup');
+            const captchaSliderBg = document.getElementById('captchaSliderBg');
+            const captchaFill = document.getElementById('captchaFill');
+            const captchaThumb = document.getElementById('captchaThumb');
+            const captchaHint = document.getElementById('captchaHint');
+            const contractOverlay = document.getElementById('contractOverlay');
+            const contractCheckbox = document.getElementById('contractCheckbox');
+            const contractAgreeBtn = document.getElementById('contractAgreeBtn');
+            const topToast = document.getElementById('topToast');
+            const finalOverlay = document.getElementById('finalOverlay');
+            const finalModal = document.getElementById('finalModal');
 
-        // ========== DOM 元素 ==========
-        const loginPanel = document.getElementById('login-panel');
-        const registerPanel = document.getElementById('register-panel');
-        const userPanel = document.getElementById('user-panel');
-        const loginMsg = document.getElementById('loginMsg');
-        const regMsg = document.getElementById('regMsg');
-        const userMsg = document.getElementById('userMsg');
+            // 登录相关 DOM
+            const tabsBar = document.getElementById('tabsBar');
+            const registerPanel = document.getElementById('registerPanel');
+            const loginPanel = document.getElementById('loginPanel');
+            const userPanel = document.getElementById('userPanel');
+            const loginMsg = document.getElementById('loginMsg');
+            const userMsg = document.getElementById('userMsg');
+            const loginEmailInput = document.getElementById('loginEmail');
+            const loginPasswordInput = document.getElementById('loginPassword');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
 
-        // ========== Tab 切换 ==========
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const panels = {
-            login: loginPanel,
-            register: registerPanel
-        };
+            // ========== 状态变量 ==========
+            let currentRotation = 0,
+                isSpinning = false,
+                genderSelected = false,
+                attemptCount = 0,
+                animationId = null;
+            let usernameIsBlocked = false,
+                captchaVerified = false,
+                contractAccepted = false;
+            let captchaMoveInterval = null;
+            let currentFinalStep = 0,
+                random7Digit = '';
+            let adInterval = null,
+                adIntervalTime = 2500,
+                allFinalPassed = false;
+            let escapeInterval = null;
+            let isDragging = false,
+                dragOffsetX = 0,
+                dragOffsetY = 0;
+            let escapeActive = false;
 
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // 移除所有 active
-                tabBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+            // ========== 面板切换 ==========
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panels = { registerPanel, loginPanel, userPanel };
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    Object.values(panels).forEach(p => p.classList.remove('active'));
+                    const target = this.dataset.panel;
+                    if (panels[target]) panels[target].classList.add('active');
+                    if (target === 'loginPanel') loginMsg.textContent = '';
+                });
+            });
 
-                // 隐藏所有面板
+            function switchToUser(email) {
                 Object.values(panels).forEach(p => p.classList.remove('active'));
-                // 显示目标面板
-                const target = this.dataset.target;
-                panels[target].classList.add('active');
-
-                // 清空对应消息
-                if (target === 'login') loginMsg.textContent = '';
-                else regMsg.textContent = '';
-            });
-        });
-
-        // ========== 工具函数 ==========
-        function showMsg(element, text, isSuccess = false) {
-            element.textContent = text;
-            element.className = 'message' + (isSuccess ? ' success' : '');
-        }
-
-        function switchToUser(user) {
-            loginPanel.classList.remove('active');
-            registerPanel.classList.remove('active');
-            userPanel.classList.remove('hidden');
-            document.getElementById('userEmail').textContent = user.email;
-            // 隐藏tab按钮（可选，让界面更干净）
-            document.querySelector('.tabs').classList.add('hidden');
-        }
-
-        function switchToAuth() {
-            userPanel.classList.add('hidden');
-            document.querySelector('.tabs').classList.remove('hidden');
-            // 默认显示登录面板
-            loginPanel.classList.add('active');
-            registerPanel.classList.remove('active');
-            tabBtns.forEach(b => b.classList.remove('active'));
-            document.querySelector('.tab-btn[data-target="login"]').classList.add('active');
-            // 清空所有消息
-            loginMsg.textContent = '';
-            regMsg.textContent = '';
-            userMsg.textContent = '';
-        }
-
-        // ========== 核心业务 ==========
-        async function handleSignUp() {
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-
-            if (!email || password.length < 6) {
-                showMsg(regMsg, '请填写有效邮箱，且密码至少 6 位');
-                return;
+                userPanel.classList.add('active');
+                tabsBar.classList.add('hidden');
+                userEmailDisplay.textContent = email;
+                tabBtns.forEach(b => b.classList.remove('active'));
             }
 
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) {
-                showMsg(regMsg, '❌ 注册失败：' + error.message);
-            } else {
-                showMsg(regMsg, '✅ 注册成功！正在自动登录...', true);
-                await checkSession();
-            }
-        }
-
-        async function handleSignIn() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                showMsg(loginMsg, '请填写完整');
-                return;
+            function switchToAuth() {
+                userPanel.classList.remove('active');
+                tabsBar.classList.remove('hidden');
+                registerPanel.classList.add('active');
+                loginPanel.classList.remove('active');
+                tabBtns.forEach(b => b.classList.remove('active'));
+                document.querySelector('.tab-btn[data-panel="registerPanel"]').classList.add('active');
+                loginMsg.textContent = '';
             }
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) {
-                showMsg(loginMsg, '❌ 登录失败：' + error.message);
-            } else {
-                showMsg(loginMsg, '✅ 登录成功！', true);
-                await checkSession();
+            // ========== 转盘 ==========
+            const MALE_ANGLE = 165,
+                FEMALE_ANGLE = 165,
+                OTHER_ANGLE = 30;
+            const SECTOR_START_TOP = -90;
+            const sectors = [
+                { label: '男性 ♂', startDeg: -90, endDeg: 75, color1: '#4a90d9', color2: '#357abd', textColor: '#fff' },
+                { label: '女性 ♀', startDeg: 75, endDeg: 240, color1: '#e8917e', color2: '#c06a5c', textColor: '#fff' },
+                { label: '其他 ⚧', startDeg: 240, endDeg: 270, color1: '#2563eb', color2: '#1e40af', textColor: '#fff' },
+            ];
+
+            function drawWheel(rd) {
+                ctx.clearRect(0, 0, 300, 300);
+                ctx.save();
+                ctx.translate(150, 150);
+                ctx.rotate(rd * Math.PI / 180);
+                sectors.forEach(s => {
+                    const sr = s.startDeg * Math.PI / 180,
+                        er = s.endDeg * Math.PI / 180;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.arc(0, 0, 140, sr, er);
+                    ctx.closePath();
+                    const g = ctx.createRadialGradient(0, 0, 25, 0, 0, 140);
+                    g.addColorStop(0, s.color1);
+                    g.addColorStop(1, s.color2);
+                    ctx.fillStyle = g;
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.save();
+                    ctx.rotate((sr + er) / 2);
+                    ctx.fillStyle = s.textColor;
+                    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(s.label, 95, 0);
+                    ctx.restore();
+                });
+                ctx.restore();
             }
-        }
 
-        async function handleSignOut() {
-            await supabaseClient.auth.signOut();
-            switchToAuth();
-            loginMsg.textContent = '已退出';
-            loginMsg.className = 'message';
-        }
+            function getPointedSector(rd) {
+                let pw = (-90 - rd) % 360;
+                if (pw < 0) pw += 360;
 
-        async function checkSession() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                switchToUser(session.user);
-            } else {
-                switchToAuth();
-            }
-        }
-
-        // ========== 事件绑定 ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('regBtn').addEventListener('click', handleSignUp);
-            document.getElementById('loginBtn').addEventListener('click', handleSignIn);
-            document.getElementById('logoutBtn').addEventListener('click', handleSignOut);
-
-            checkSession();
-
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_IN' && session) {
-                    switchToUser(session.user);
-                } else if (event === 'SIGNED_OUT') {
-                    switchToAuth();
+                function norm(d) { let x = d % 360; if (x < 0) x += 360; return x; }
+                for (const s of sectors) {
+                    const sn = norm(s.startDeg),
+                        en = norm(s.endDeg);
+                    if (sn < en) { if (pw >= sn && pw < en) return s; } else { if (pw >= sn || pw < en) return s; }
                 }
+                return sectors[2];
+            }
+
+            function spinWheel() {
+                if (isSpinning || genderSelected) return;
+                isSpinning = true;
+                wheelWrapper.classList.add('disabled');
+                spinHint.textContent = '🌀 转盘旋转中...';
+                canvas.classList.remove('glow-success', 'glow-fail');
+                attemptCount++;
+                updateAttemptCounter();
+                const er = 5 + Math.floor(Math.random() * 6);
+                const tr = er * 360 + Math.random() * 360;
+                const sr = currentRotation;
+                const target = sr + tr;
+                const dur = 3000 + Math.random() * 1500;
+                const st = performance.now();
+
+                function anim(now) {
+                    const p = Math.min((now - st) / dur, 1);
+                    const e = 1 - Math.pow(1 - p, 3.5);
+                    currentRotation = sr + tr * e;
+                    drawWheel(currentRotation);
+                    if (p < 1) animationId = requestAnimationFrame(anim);
+                    else { currentRotation = target;
+                        drawWheel(currentRotation);
+                        onSpinComplete(); }
+                }
+                animationId = requestAnimationFrame(anim);
+            }
+
+            function onSpinComplete() {
+                isSpinning = false;
+                wheelWrapper.classList.remove('disabled');
+                const ps = getPointedSector(currentRotation);
+                ps.label.includes('其他') ? handleSuccess() : handleFailure(ps);
+            }
+
+            function handleSuccess() {
+                genderSelected = true;
+                canvas.classList.add('glow-success');
+                spinHint.textContent = '性别「其他」可用';
+                spinHint.style.color = '#16a34a';
+                messageArea.innerHTML =
+                    `<div class="message-box success">✅ 性别「其他」选择成功（尝试了 ${attemptCount} 次）</div>`;
+                stepDot1.classList.remove('active');
+                stepDot1.classList.add('done');
+                stepDot2.classList.add('active');
+                stepLine.classList.add('done');
+                nextStepForm.classList.add('visible');
+                setTimeout(() => nextStepForm.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+                spawnConfetti();
+                wheelWrapper.style.pointerEvents = 'none';
+                wheelWrapper.style.opacity = '0.65';
+                updateAttemptCounter();
+            }
+
+            function handleFailure(s) {
+                canvas.classList.add('glow-fail');
+                spinHint.textContent = '再试一次';
+                spinHint.style.color = '';
+                const m = ['此性别已被使用 😅'][
+                    Math.floor(Math.random() * 5)
+                ];
+                messageArea.innerHTML =
+                    `<div class="message-box error">⛔ ${m.replace('此性别','「'+(s.label.includes('男性')?'男性':'女性')+'」')}</div>`;
+                setTimeout(() => canvas.classList.remove('glow-fail'), 700);
+            }
+
+            function updateAttemptCounter() { attemptCounter.innerHTML = attemptCount > 0 ?
+                    `已尝试 <span>${attemptCount}</span> 次` : ''; }
+
+            function spawnConfetti() {
+                const colors = ['#2563eb', '#ef4444', '#16a34a', '#f59e0b'];
+                for (let i = 0; i < 50; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'confetti-piece';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = -Math.random() * 50 + 'px';
+                    p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    p.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    confettiContainer.appendChild(p);
+                }
+                setTimeout(() => confettiContainer.innerHTML = '', 3500);
+            }
+
+            // ========== 用户名校验 ==========
+            function isNameBlocked(n) {
+                const t = n.trim();
+                if (!t) return false;
+                return /^[\u4e00-\u9fff]{2,4}$/.test(t) || (t.includes(' ') && t.split(/\s+/).length >= 2 && t.split(
+                    /\s+/).every(p => /^[A-Za-z]\.?$|^[A-Za-z]+$/.test(p)));
+            }
+
+            function validateUsername() {
+                if (inputUsername.value.trim() && isNameBlocked(inputUsername.value.trim())) {
+                    inputUsername.classList.add('input-error');
+                    usernameError.classList.add('visible');
+                    usernameIsBlocked = true;
+                } else { inputUsername.classList.remove('input-error');
+                    usernameError.classList.remove('visible');
+                    usernameIsBlocked = false; }
+                updateSubmitState();
+            }
+            inputUsername.addEventListener('input', validateUsername);
+
+            phoneSlider.addEventListener('input', () => {
+                phoneValue.textContent = phoneSlider.value.toString().replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3');
+                if (!captchaVerified) showCaptchaPopup();
             });
-        });
+
+            function showCaptchaPopup() {
+                if (captchaPopup.classList.contains('visible')) return;
+                captchaPopup.classList.add('visible');
+                captchaFill.style.width = '0%';
+                captchaThumb.style.left = '0px';
+                moveCaptchaRandomly();
+                captchaMoveInterval = setInterval(moveCaptchaRandomly, 1000);
+            }
+
+            function moveCaptchaRandomly() {
+                const pw = captchaPopup.offsetWidth,
+                    ph = captchaPopup.offsetHeight;
+                captchaPopup.style.left = Math.max(10, Math.random() * (window.innerWidth - pw - 20)) + 'px';
+                captchaPopup.style.top = Math.max(10, Math.random() * (window.innerHeight - ph - 20)) + 'px';
+            }
+
+            function handleCaptchaDragStart(e) {
+                e.preventDefault();
+                const sr = captchaSliderBg.getBoundingClientRect();
+                const ml = sr.width - captchaThumb.offsetWidth;
+                let dragging = true;
+
+                function onMove(ev) {
+                    if (!dragging) return;
+                    const cx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+                    let nl = cx - sr.left - captchaThumb.offsetWidth / 2;
+                    nl = Math.max(0, Math.min(nl, ml));
+                    captchaThumb.style.left = nl + 'px';
+                    captchaFill.style.width = (nl / ml * 100) + '%';
+                    if (nl >= ml - 2) { captchaVerified = true;
+                        captchaPopup.classList.remove('visible');
+                        clearInterval(captchaMoveInterval);
+                        dragging = false;
+                        document.removeEventListener('mousemove', onMove);
+                        document.removeEventListener('mouseup', onEnd);
+                        document.removeEventListener('touchmove', onMove);
+                        document.removeEventListener('touchend', onEnd);
+                        showContractModal(); }
+                }
+
+                function onEnd() { if (!captchaVerified) { captchaFill.style.width = '0%';
+                        captchaThumb.style.left = '0px'; } dragging = false;
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onEnd);
+                    document.removeEventListener('touchmove', onMove);
+                    document.removeEventListener('touchend', onEnd); }
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, { passive: false });
+                document.addEventListener('touchend', onEnd);
+            }
+            captchaThumb.addEventListener('mousedown', handleCaptchaDragStart);
+            captchaThumb.addEventListener('touchstart', handleCaptchaDragStart, { passive: false });
+
+            function showContractModal() { contractOverlay.classList.add('active');
+                contractCheckbox.checked = false;
+                contractAgreeBtn.disabled = true; }
+            contractCheckbox.addEventListener('change', () => contractAgreeBtn.disabled = !contractCheckbox.checked);
+            contractAgreeBtn.addEventListener('click', () => {
+                if (!contractCheckbox.checked) return;
+                contractAccepted = true;
+                contractOverlay.classList.remove('active');
+                topToast.style.top = '50%';
+                topToast.style.transform = 'translate(-50%, -50%)';
+                setTimeout(() => { topToast.style.top = '-80px';
+                    topToast.style.transform = 'translateX(-50%)'; }, 1500);
+                updateSubmitState();
+            });
+
+            function updateSubmitState() {
+                const ok = inputUsername.value.trim().length >= 2 && !usernameIsBlocked && inputRegEmail.value.includes(
+                    '@') && inputRegEmail.value.includes('.') && inputRegPassword.value.length >= 8 &&
+                    captchaVerified && contractAccepted;
+                btnSubmit.disabled = !ok;
+            }
+            inputRegEmail.addEventListener('input', updateSubmitState);
+            inputRegPassword.addEventListener('input', updateSubmitState);
+
+            // ========== 广告弹窗 ==========
+            function spawnAdPopup() {
+                if (allFinalPassed || escapeActive) return;
+                const ad = document.createElement('div');
+                ad.className = 'ad-popup';
+                const w = 200 + Math.floor(Math.random() * 250);
+                const h = 100 + Math.floor(Math.random() * 180);
+                ad.style.width = w + 'px';
+                ad.style.height = h + 'px';
+                ad.style.left = Math.max(5, Math.random() * (window.innerWidth - w - 10)) + 'px';
+                ad.style.top = Math.max(5, Math.random() * (window.innerHeight - h - 10)) + 'px';
+                ad.style.background = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff922b'][Math.floor(Math.random() *
+                    5)];
+                ad.textContent = ['🔥 恭喜获得iPhone！', '⚠️ 账户风险', '💰 点击领$1000', '📢 404', '🎁 中奖了！', '📩 999+消息', '🔒 安全警告',
+                    '💊 每天登录延寿', '📺 点击观看', '🆓 免费会员'
+                ][Math.floor(Math.random() * 10)];
+                const cls = document.createElement('span');
+                cls.className = 'ad-close';
+                cls.textContent = '✕';
+                cls.onclick = (e) => { e.stopPropagation();
+                    ad.remove(); };
+                ad.appendChild(cls);
+                ad.onclick = () => ad.remove();
+                document.body.appendChild(ad);
+                setTimeout(() => { if (ad.parentNode) ad.remove(); }, 8000 + Math.random() * 10000);
+            }
+
+            function startAdSpam() { adIntervalTime = 2500;
+                adInterval = setInterval(() => { spawnAdPopup();
+                    spawnAdPopup(); }, adIntervalTime); }
+
+            function speedUpAds() { adIntervalTime = Math.max(400, adIntervalTime - 400);
+                clearInterval(adInterval);
+                adInterval = setInterval(() => { spawnAdPopup();
+                    spawnAdPopup(); }, adIntervalTime); }
+
+            function stopAdSpam() { clearInterval(adInterval); }
+
+            // ========== 最终验证 ==========
+            const finalSteps = [
+                { title: '验证 1/5', prompt: '请输入"1+1=?"的答案', answer: '?' },
+                { title: '验证 2/5', prompt: '记住数字，3秒后输入', answer: '', type: 'memory' },
+                { title: '验证 3/5', prompt: '请输入当前年份', answer: new Date().getFullYear().toString() },
+                { title: '验证 4/5', prompt: '请输入圆周率π的第8位', answer: '5' },
+                { title: '验证 5/5', prompt: '请输入系统暗号', answer: '芝麻开门' },
+            ];
+
+            function showFinalStep(idx) {
+                if (idx >= finalSteps.length) { allFinalPassed = true;
+                    stopAdSpam();
+                    finalOverlay.classList.remove('active');
+                    startEscapeMode(); return; }
+                currentFinalStep = idx;
+                const step = finalSteps[idx];
+                if (step.type === 'memory') { random7Digit = ''; for (let i = 0; i < 7; i++) random7Digit += Math.floor(
+                        Math.random() * 10);
+                    step.answer = random7Digit; }
+                let html =
+                    `<span class="step-badge">${step.title}</span><h3>${step.title}</h3><p>${step.prompt}</p>`;
+                if (step.type === 'memory') html +=
+                    `<div class="digit-display" id="digitDisplay">${random7Digit}</div><div class="final-input-area hidden" id="finalInputArea"><input id="finalInput" placeholder="输入数字"><div class="err-msg"></div><button class="btn-confirm" id="finalConfirmBtn">确认</button></div>`;
+                else html +=
+                    `<input id="finalInput" placeholder="输入答案"><div class="err-msg"></div><button class="btn-confirm" id="finalConfirmBtn">确认</button>`;
+                finalModal.innerHTML = html;
+                finalOverlay.classList.add('active');
+                const input = document.getElementById('finalInput');
+                const btn = document.getElementById('finalConfirmBtn');
+                if (step.type === 'memory') setTimeout(() => { document.getElementById('digitDisplay').classList.add(
+                        'hidden');
+                    document.getElementById('finalInputArea').classList.remove('hidden');
+                    input.focus(); }, 3000);
+                else setTimeout(() => input.focus(), 200);
+                btn.addEventListener('click', () => {
+                    if (input.value.trim() === step.answer) { finalOverlay.classList.remove('active');
+                        speedUpAds();
+                        setTimeout(() => showFinalStep(idx + 1), 300); } else { input.classList.add(
+                        'input-error'); if (step.type === 'memory') { finalOverlay.classList.remove(
+                            'active');
+                        stopAdSpam();
+                        currentFinalStep = 0;
+                        setTimeout(() => { showFinalStep(0);
+                            startAdSpam(); }, 500); } else setTimeout(() => input.classList.remove(
+                        'input-error'), 1500); }
+                });
+            }
+
+            // ========== 按钮逃跑模式 ==========
+            function startEscapeMode() {
+                escapeActive = true;
+                stopAdSpam();
+                document.querySelectorAll('.ad-popup').forEach(a => a.remove());
+                const anchorRect = btnAnchor.getBoundingClientRect();
+                const originalLeft = anchorRect.left;
+                const originalTop = anchorRect.top;
+                const originalWidth = anchorRect.offsetWidth;
+                btnTargetZone.classList.add('visible');
+                btnSubmit.disabled = false;
+                btnSubmit.classList.add('escaping');
+                btnSubmit.style.left = originalLeft + 'px';
+                btnSubmit.style.top = originalTop + 'px';
+                btnSubmit.style.width = originalWidth + 'px';
+                btnSubmit.textContent = '🏃 抓住我！';
+                dragHint.classList.add('visible');
+                setTimeout(() => dragHint.classList.remove('visible'), 4000);
+
+                function moveButtonRandomly() {
+                    if (!escapeActive || isDragging) return;
+                    const bw = btnSubmit.offsetWidth;
+                    const bh = btnSubmit.offsetHeight;
+                    btnSubmit.style.left = Math.max(5, Math.random() * (window.innerWidth - bw - 10)) + 'px';
+                    btnSubmit.style.top = Math.max(5, Math.random() * (window.innerHeight - bh - 10)) + 'px';
+                }
+                moveButtonRandomly();
+                escapeInterval = setInterval(moveButtonRandomly, 800 + Math.random() * 600);
+                btnSubmit.addEventListener('mousedown', onEscapeDragStart);
+                btnSubmit.addEventListener('touchstart', onEscapeDragStart, { passive: false });
+                messageArea.innerHTML = '<div class="message-box success">🎯 请将注册按钮拖回表单中的虚线框！</div>';
+            }
+
+            function onEscapeDragStart(e) {
+                if (!escapeActive) return;
+                e.preventDefault();
+                isDragging = true;
+                clearInterval(escapeInterval);
+                btnSubmit.style.cursor = 'grabbing';
+                btnSubmit.textContent = '😱 别松手！';
+                const rect = btnSubmit.getBoundingClientRect();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                dragOffsetX = cx - rect.left;
+                dragOffsetY = cy - rect.top;
+
+                function onMove(ev) {
+                    if (!isDragging) return;
+                    const mx = ev.touches ? ev.touches[0].clientX : ev.clientX;
+                    const my = ev.touches ? ev.touches[0].clientY : ev.clientY;
+                    btnSubmit.style.left = (mx - dragOffsetX) + 'px';
+                    btnSubmit.style.top = (my - dragOffsetY) + 'px';
+                }
+
+                function onEnd() {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    btnSubmit.style.cursor = 'grab';
+                    btnSubmit.textContent = '🏃 抓住我！';
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onEnd);
+                    document.removeEventListener('touchmove', onMove);
+                    document.removeEventListener('touchend', onEnd);
+                    checkIfDroppedOnTarget();
+                }
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove, { passive: false });
+                document.addEventListener('touchend', onEnd);
+            }
+
+            function checkIfDroppedOnTarget() {
+                const btnRect = btnSubmit.getBoundingClientRect();
+                const targetRect = btnTargetZone.getBoundingClientRect();
+                const btnCenterX = btnRect.left + btnRect.width / 2;
+                const btnCenterY = btnRect.top + btnRect.height / 2;
+                const tolerance = 30;
+                const isInsideX = btnCenterX > targetRect.left - tolerance && btnCenterX < targetRect.right +
+                    tolerance;
+                const isInsideY = btnCenterY > targetRect.top - tolerance && btnCenterY < targetRect.bottom +
+                    tolerance;
+                if (isInsideX && isInsideY) { escapeComplete(); } else {
+                    if (escapeActive) {
+                        escapeInterval = setInterval(() => {
+                            if (!isDragging && escapeActive) {
+                                const bw = btnSubmit.offsetWidth;
+                                const bh = btnSubmit.offsetHeight;
+                                btnSubmit.style.left = Math.max(5, Math.random() * (window.innerWidth - bw -
+                                    10)) + 'px';
+                                btnSubmit.style.top = Math.max(5, Math.random() * (window.innerHeight - bh -
+                                    10)) + 'px';
+                            }
+                        }, 800 + Math.random() * 600);
+                        dragHint.classList.add('visible');
+                        setTimeout(() => dragHint.classList.remove('visible'), 2500);
+                    }
+                }
+            }
+
+            function escapeComplete() {
+                escapeActive = false;
+                clearInterval(escapeInterval);
+                isDragging = false;
+                btnSubmit.classList.remove('escaping');
+                btnSubmit.style.left = '';
+                btnSubmit.style.top = '';
+                btnSubmit.style.width = '';
+                btnSubmit.style.cursor = '';
+                btnSubmit.textContent = '✅ 注册中...';
+                btnSubmit.disabled = true;
+                btnTargetZone.classList.remove('visible');
+                dragHint.classList.remove('visible');
+                btnSubmit.removeEventListener('mousedown', onEscapeDragStart);
+                btnSubmit.removeEventListener('touchstart', onEscapeDragStart);
+
+                // ========== 调用 Supabase 注册 ==========
+                performSupabaseSignUp();
+            }
+
+            async function performSupabaseSignUp() {
+                const email = inputRegEmail.value.trim();
+                const password = inputRegPassword.value;
+                const username = inputUsername.value.trim();
+                const phone = phoneSlider.value;
+
+                messageArea.innerHTML = '<div class="message-box success">⏳ 正在注册到服务器...</div>';
+
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            username: username,
+                            phone: phone,
+                            gender: 'other'
+                        }
+                    }
+                });
+
+                if (error) {
+                    messageArea.innerHTML =
+                        `<div class="message-box error">❌ 注册失败：${error.message}（但您已通过所有恶搞考验！）</div>`;
+                    btnSubmit.textContent = '🚀 重试';
+                    btnSubmit.disabled = false;
+                    btnSubmit.style.opacity = '1';
+                    btnSubmit.style.cursor = 'pointer';
+                    // 允许重试
+                    btnSubmit.addEventListener('click', function retry() {
+                        btnSubmit.removeEventListener('click', retry);
+                        performSupabaseSignUp();
+                    }, { once: true });
+                } else {
+                    messageArea.innerHTML = '<div class="message-box success">🎉 注册成功！</div>';
+                    stepDot2.classList.remove('active');
+                    stepDot2.classList.add('done');
+                    stepDot3.classList.add('active');
+                    stepLine2.classList.add('done');
+                    spawnConfetti();
+                    setTimeout(() => spawnConfetti(), 500);
+                    // 切换到用户面板
+                    setTimeout(() => switchToUser(email), 1500);
+                }
+            }
+
+            // ========== 登录功能 ==========
+            async function handleSignIn() {
+                const email = loginEmailInput.value.trim();
+                const password = loginPasswordInput.value;
+                if (!email || !password) { loginMsg.textContent = '请填写完整';
+                    loginMsg.className = 'message'; return; }
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) { loginMsg.textContent = '❌ 登录失败：' + error.message;
+                    loginMsg.className = 'message'; } else { loginMsg.textContent = '✅ 登录成功！';
+                    loginMsg.className = 'message success';
+                    switchToUser(data.user.email); }
+            }
+
+            async function handleSignOut() {
+                await supabaseClient.auth.signOut();
+                switchToAuth();
+                messageArea.innerHTML = '';
+                loginMsg.textContent = '';
+                userMsg.textContent = '';
+            }
+
+            async function checkSession() {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session && session.user) { switchToUser(session.user.email); }
+            }
+
+            // ========== 事件绑定 ==========
+            loginBtn.addEventListener('click', handleSignIn);
+            logoutBtn.addEventListener('click', handleSignOut);
+            loginPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleSignIn(); });
+            inputRegPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !btnSubmit.disabled && !
+                    escapeActive) btnSubmit.click(); });
+
+            btnSubmit.addEventListener('click', (e) => {
+                if (escapeActive) return;
+                if (btnSubmit.disabled) return;
+                currentFinalStep = 0;
+                allFinalPassed = false;
+                startAdSpam();
+                showFinalStep(0);
+            });
+
+            canvas.addEventListener('click', () => { if (!isSpinning && !genderSelected) spinWheel(); });
+            wheelWrapper.addEventListener('click', (e) => { if (e.target !== canvas && !isSpinning && !genderSelected)
+                spinWheel(); });
+            document.addEventListener('keydown', (e) => { if (e.code === 'Space' && !isSpinning && !genderSelected) { e
+                    .preventDefault();
+                    spinWheel(); } });
+
+            // Supabase 认证状态监听
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) { switchToUser(session.user.email); } else if (event ===
+                    'SIGNED_OUT') { switchToAuth(); }
+            });
+
+            drawWheel(0);
+            checkSession();
+        })();
     </script>
 </body>
 </html>
