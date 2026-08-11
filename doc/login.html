@@ -170,15 +170,24 @@
         /* ===== 转盘 ===== */
         .wheel-wrapper {
             position: relative;
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin: 0 auto 14px;
             cursor: pointer;
+            max-width: 100%;
         }
         .wheel-wrapper.disabled {
             pointer-events: none;
             opacity: 0.7;
         }
+        /* 画布：自适应宽度，保持比例，最大300px */
         canvas#wheelCanvas {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            aspect-ratio: 1/1;
             border-radius: 50%;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 0 0 6px hsl(var(--muted)), 0 0 0 8px hsl(var(--border));
             transition: box-shadow 0.4s;
@@ -221,14 +230,26 @@
                 transform: translateX(-0.5px)
             }
         }
+        /* 指针（三角形）固定在 canvas 正上方 */
+        .wheel-pointer {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
         .spin-hint {
             font-size: 0.78em;
             color: hsl(var(--muted-foreground));
             margin-top: 6px;
+            text-align: center;
         }
         .message-area {
             min-height: 40px;
             margin: 6px 0;
+            text-align: center;
         }
         .message-box {
             padding: 8px 16px;
@@ -253,6 +274,7 @@
             font-size: 0.73em;
             color: #9ca3af;
             margin-top: 2px;
+            text-align: center;
         }
         .attempt-counter span {
             color: #f59e0b;
@@ -901,8 +923,25 @@
                 border-radius: 1rem;
             }
             canvas#wheelCanvas {
-                width: 260px;
-                height: 260px;
+                max-width: 260px;
+            }
+        }
+        /* 步骤2表单显示动画 */
+        .next-step-form {
+            display: none;
+        }
+        .next-step-form.visible {
+            display: block;
+            animation: fadeSlideUp 0.45s ease forwards;
+        }
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
@@ -980,21 +1019,22 @@
                     <div class="step-dot" id="stepDot3">3</div>
                 </div>
 
+                <!-- 转盘容器：flex 居中，指针绝对定位 -->
                 <div class="wheel-wrapper" id="wheelWrapper">
-                    <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);z-index:10;">
-                        <svg width="36" height="28"><polygon points="20,28 0,0 40,0" fill="#ef4444" stroke="#fff" stroke-width="1.2"/></svg>
+                    <!-- 指针（三角形）固定在 canvas 正上方 -->
+                    <div class="wheel-pointer">
+                        <svg width="36" height="28" viewBox="0 0 40 28">
+                            <polygon points="20,28 0,0 40,0" fill="#ef4444" stroke="#fff" stroke-width="1.5"/>
+                        </svg>
                     </div>
                     <canvas id="wheelCanvas" width="300" height="300"></canvas>
                 </div>
-                <div class="spin-hint text-center" id="spinHint">👆 点击转盘选择性别</div>
-                <div class="message-area text-center" id="messageArea"></div>
-                <div class="attempt-counter text-center" id="attemptCounter"></div>
+                <div class="spin-hint" id="spinHint">👆 点击转盘选择性别</div>
+                <div class="message-area" id="messageArea"></div>
+                <div class="attempt-counter" id="attemptCounter"></div>
 
                 <div class="next-step-form" id="nextStepForm">
-                    <div class="text-center mb-3">
-                        <span style="font-size:1.6em;">🎉</span>
-                        <p style="color:#16a34a;font-weight:700;">性别选择成功：<strong>其他</strong> ✓</p>
-                    </div>
+                    <div id="step2Message" style="text-align:center;margin-bottom:12px;"></div>
                     <div class="form-group">
                         <label>👤 用户名</label>
                         <input type="text" id="username" placeholder="请输入用户名">
@@ -1094,7 +1134,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
 
-    <!-- ===== 所有功能脚本（完整保留 login.html 的逻辑） ===== -->
+    <!-- ===== 所有功能脚本（完整保留 login.html 的逻辑，修复边界问题） ===== -->
     <script>
         (function() {
             // ========== Supabase 初始化 ==========
@@ -1110,6 +1150,7 @@
             const messageArea = document.getElementById('messageArea');
             const attemptCounter = document.getElementById('attemptCounter');
             const nextStepForm = document.getElementById('nextStepForm');
+            const step2Message = document.getElementById('step2Message');
             const stepDot1 = document.getElementById('stepDot1');
             const stepDot2 = document.getElementById('stepDot2');
             const stepDot3 = document.getElementById('stepDot3');
@@ -1204,10 +1245,6 @@
             }
 
             // ========== 转盘 ==========
-            const MALE_ANGLE = 165,
-                FEMALE_ANGLE = 165,
-                OTHER_ANGLE = 30;
-            const SECTOR_START_TOP = -90;
             const sectors = [
                 { label: '男性 ♂', startDeg: -90, endDeg: 75, color1: '#4a90d9', color2: '#357abd', textColor: '#fff' },
                 { label: '女性 ♀', startDeg: 75, endDeg: 240, color1: '#e8917e', color2: '#c06a5c', textColor: '#fff' },
@@ -1246,17 +1283,28 @@
                 ctx.restore();
             }
 
+            // 修复边界：当指针恰好落在扇区边界时，优先归属后一个扇区（使用 <= 处理端点）
             function getPointedSector(rd) {
                 let pw = (-90 - rd) % 360;
                 if (pw < 0) pw += 360;
 
-                function norm(d) { let x = d % 360; if (x < 0) x += 360; return x; }
-                for (const s of sectors) {
-                    const sn = norm(s.startDeg),
-                        en = norm(s.endDeg);
-                    if (sn < en) { if (pw >= sn && pw < en) return s; } else { if (pw >= sn || pw < en) return s; }
+                // 对每个扇区，判断指针角度是否在范围内（包含起始，不包含结束，但处理跨0的情况）
+                for (let i = 0; i < sectors.length; i++) {
+                    const s = sectors[i];
+                    let start = s.startDeg % 360;
+                    if (start < 0) start += 360;
+                    let end = s.endDeg % 360;
+                    if (end < 0) end += 360;
+                    // 处理跨越0度的情况
+                    if (start < end) {
+                        if (pw >= start && pw < end) return s;
+                    } else {
+                        // 跨0，例如 start=270, end=75
+                        if (pw >= start || pw < end) return s;
+                    }
                 }
-                return sectors[2];
+                // 如果都没有匹配（例如正好落在 end 上），返回最后一个扇区（其他）
+                return sectors[sectors.length - 1];
             }
 
             function spinWheel() {
@@ -1291,7 +1339,11 @@
                 isSpinning = false;
                 wheelWrapper.classList.remove('disabled');
                 const ps = getPointedSector(currentRotation);
-                ps.label.includes('其他') ? handleSuccess() : handleFailure(ps);
+                if (ps.label.includes('其他')) {
+                    handleSuccess();
+                } else {
+                    handleFailure(ps);
+                }
             }
 
             function handleSuccess() {
@@ -1301,6 +1353,8 @@
                 spinHint.style.color = '#16a34a';
                 messageArea.innerHTML =
                     `<div class="message-box success">✅ 性别「其他」选择成功（尝试了 ${attemptCount} 次）</div>`;
+                // 动态生成步骤2的成功消息
+                step2Message.innerHTML = `<span style="font-size:1.6em;">🎉</span><p style="color:#16a34a;font-weight:700;">性别选择成功：<strong>其他</strong> ✓</p>`;
                 stepDot1.classList.remove('active');
                 stepDot1.classList.add('done');
                 stepDot2.classList.add('active');
