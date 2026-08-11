@@ -1,145 +1,173 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-Hans">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册 / 登录 - 幸运性别转盘</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>注册 / 登录 | 小陈同学-STUCDX</title>
+    <meta name="description" content="小陈同学-STUCDX 的注册登录页面。" />
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        primary: {
+                            DEFAULT: 'hsl(var(--primary))',
+                            foreground: 'hsl(var(--primary-foreground))',
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(var(--muted))',
+                            foreground: 'hsl(var(--muted-foreground))',
+                        },
+                        card: {
+                            DEFAULT: 'hsl(var(--card))',
+                            foreground: 'hsl(var(--card-foreground))',
+                        },
+                        border: 'hsl(var(--border))',
+                        accent: {
+                            DEFAULT: 'hsl(var(--accent))',
+                            foreground: 'hsl(var(--accent-foreground))',
+                        },
+                        ring: 'hsl(var(--ring))',
+                    },
+                },
+            },
+        };
     </script>
     <style>
+        /* ===== CSS 变量（与 25e24.html 一致） ===== */
         :root {
-            --bg: #f0f2f5;
-            --card-bg: #ffffff;
-            --text: #1a1a1a;
-            --subtext: #6b7280;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --error: #dc2626;
-            --error-bg: #fef2f2;
-            --error-border: #fecaca;
-            --success: #16a34a;
-            --success-bg: #f0fdf4;
-            --border: #e5e7eb;
-            --input-bg: #f9fafb;
-            --input-border: #d1d5db;
-            --input-focus-border: #2563eb;
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 221.2 83.2% 53.3%;
+            --primary-foreground: 210 40% 98%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --border: 214.3 31.8% 91.4%;
+            --ring: 221.2 83.2% 53.3%;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --primary: 217.2 91.2% 59.8%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --ring: 224.3 76.3% 48%;
         }
         body {
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: var(--text);
-            user-select: none;
-            line-height: 1.5;
-            overflow-x: hidden;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            transition: background-color 0.3s, color 0.3s;
         }
-        .container {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 28px 32px 32px;
+        .nav-link {
+            color: hsl(var(--muted-foreground));
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+        .nav-link:hover {
+            color: hsl(var(--foreground));
+        }
+
+        /* ===== login.html 功能样式（保留所有功能，颜色适配 CSS 变量） ===== */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            z-index: 60;
+            min-width: 160px;
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            top: 100%;
+            margin-top: 0.25rem;
+            right: 0;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
             width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border: 1px solid var(--border);
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            color: hsl(var(--foreground));
+            transition: background-color 0.15s;
+            white-space: nowrap;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+        }
+        .dropdown-wrapper {
             position: relative;
-            z-index: 10;
+            display: inline-block;
         }
-        /* Tab 切换 */
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
+        .lucide-icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: middle;
         }
-        .tab-btn {
-            flex: 1;
-            padding: 10px 0;
+
+        /* ===== 登录卡片 ===== */
+        .login-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .login-card .tab-btn {
             background: none;
             border: none;
-            font-size: 16px;
             font-weight: 600;
-            color: #9aa6b5;
+            color: hsl(var(--muted-foreground));
             cursor: pointer;
             transition: 0.2s;
             border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
+            padding: 0.75rem 0;
+            font-size: 1rem;
             letter-spacing: 0.02em;
+            flex: 1;
         }
-        .tab-btn.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
+        .login-card .tab-btn.active {
+            color: hsl(var(--primary));
+            border-bottom-color: hsl(var(--primary));
         }
-        .tab-btn:hover {
-            color: var(--accent);
+        .login-card .tab-btn:hover {
+            color: hsl(var(--primary));
         }
-        .panel {
+        .login-card .panel {
             display: none;
         }
-        .panel.active {
+        .login-card .panel.active {
             display: block;
         }
-        .header-area {
-            margin-bottom: 20px;
-        }
-        .main-title {
-            font-size: 1.6em;
-            font-weight: 700;
-            color: #111827;
-        }
-        .sub-title {
-            font-size: 0.85em;
-            color: var(--subtext);
-        }
-        .step-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .step-dot {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 12px;
-            transition: 0.35s;
-            background: #f3f4f6;
-            color: #9ca3af;
-            border: 2px solid #e5e7eb;
-        }
-        .step-dot.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-        }
-        .step-dot.done {
-            background: var(--success);
-            color: #fff;
-            border-color: var(--success);
-        }
-        .step-line {
-            width: 22px;
-            height: 2px;
-            background: #e5e7eb;
-            transition: 0.35s;
-        }
-        .step-line.done {
-            background: var(--success);
-        }
 
+        /* ===== 转盘 ===== */
         .wheel-wrapper {
             position: relative;
             display: inline-block;
@@ -152,9 +180,12 @@
         }
         canvas#wheelCanvas {
             border-radius: 50%;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 0 0 6px #f9fafb, 0 0 0 8px #e5e7eb;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 0 0 6px hsl(var(--muted)), 0 0 0 8px hsl(var(--border));
             transition: box-shadow 0.4s;
             background: #fff;
+        }
+        .dark canvas#wheelCanvas {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 0 6px hsl(var(--muted)), 0 0 0 8px hsl(var(--border));
         }
         canvas#wheelCanvas.glow-success {
             box-shadow: 0 0 28px rgba(22, 163, 74, 0.4), 0 0 0 6px #f0fdf4, 0 0 0 8px #bbf7d0;
@@ -192,7 +223,7 @@
         }
         .spin-hint {
             font-size: 0.78em;
-            color: var(--subtext);
+            color: hsl(var(--muted-foreground));
             margin-top: 6px;
         }
         .message-area {
@@ -209,14 +240,14 @@
             gap: 5px;
         }
         .message-box.error {
-            background: var(--error-bg);
-            color: var(--error);
-            border: 1px solid var(--error-border);
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
         }
         .message-box.success {
-            background: var(--success-bg);
-            color: var(--success);
-            border: 1px solid var(--success-border);
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
         }
         .attempt-counter {
             font-size: 0.73em;
@@ -228,36 +259,57 @@
             font-weight: 700;
         }
 
-        .next-step-form {
-            display: none;
-            text-align: left;
-            padding: 0 2px;
-            margin-top: 20px;
-            border-top: 2px solid #e5e7eb;
-            padding-top: 18px;
-            position: relative;
+        /* ===== 步骤指示器 ===== */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
         }
-        .next-step-form.visible {
-            display: block;
-            animation: fadeSlideUp 0.45s ease forwards;
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            transition: 0.35s;
+            background: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+            border: 2px solid hsl(var(--border));
         }
-        @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .step-dot.active {
+            background: hsl(var(--primary));
+            color: #fff;
+            border-color: hsl(var(--primary));
         }
+        .step-dot.done {
+            background: #16a34a;
+            color: #fff;
+            border-color: #16a34a;
+        }
+        .step-line {
+            width: 22px;
+            height: 2px;
+            background: hsl(var(--border));
+            transition: 0.35s;
+        }
+        .step-line.done {
+            background: #16a34a;
+        }
+
+        /* ===== 表单 ===== */
         .form-group {
             margin-bottom: 13px;
+            text-align: left;
         }
         .form-group label {
             font-weight: 600;
             font-size: 0.82em;
-            color: #374151;
+            color: hsl(var(--foreground));
             display: block;
             margin-bottom: 4px;
         }
@@ -265,22 +317,26 @@
             width: 100%;
             padding: 10px 12px;
             border-radius: 8px;
-            border: 2px solid var(--input-border);
-            background: var(--input-bg);
+            border: 2px solid hsl(var(--border));
+            background: hsl(var(--muted));
             font-size: 0.9em;
             outline: none;
             transition: 0.25s;
+            color: hsl(var(--foreground));
         }
         .form-group input:focus {
-            border-color: var(--input-focus-border);
-            background: #fff;
+            border-color: hsl(var(--primary));
+            background: hsl(var(--card));
         }
         .form-group input.input-error {
-            border-color: var(--error);
+            border-color: #dc2626;
             background: #fff;
         }
+        .dark .form-group input.input-error {
+            background: hsl(var(--card));
+        }
         .inline-error {
-            color: var(--error);
+            color: #dc2626;
             font-size: 0.7em;
             font-weight: 600;
             margin-top: 4px;
@@ -300,7 +356,7 @@
             flex: 1;
             height: 7px;
             -webkit-appearance: none;
-            background: linear-gradient(to right, #2563eb, #93c5fd);
+            background: linear-gradient(to right, hsl(var(--primary)), #93c5fd);
             border-radius: 4px;
             cursor: pointer;
         }
@@ -311,15 +367,17 @@
             background: white;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            border: 2px solid #2563eb;
+            border: 2px solid hsl(var(--primary));
         }
         .phone-value {
             font-weight: 700;
             min-width: 100px;
             text-align: right;
             font-size: 0.9em;
+            color: hsl(var(--foreground));
         }
 
+        /* ===== 按钮锚点 ===== */
         .btn-anchor {
             position: relative;
             min-height: 46px;
@@ -331,13 +389,13 @@
             left: 0;
             width: 100%;
             height: 46px;
-            border: 3px dashed #2563eb;
+            border: 3px dashed hsl(var(--primary));
             border-radius: 10px;
             background: rgba(37, 99, 235, 0.05);
             display: none;
             align-items: center;
             justify-content: center;
-            color: #2563eb;
+            color: hsl(var(--primary));
             font-weight: 700;
             font-size: 0.8em;
             pointer-events: none;
@@ -349,11 +407,11 @@
         @keyframes targetPulse {
             0%,
             100% {
-                border-color: #2563eb;
+                border-color: hsl(var(--primary));
                 box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.2);
             }
             50% {
-                border-color: #1d4ed8;
+                border-color: hsl(var(--primary));
                 box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
             }
         }
@@ -363,7 +421,7 @@
             padding: 12px;
             border-radius: 10px;
             border: none;
-            background: var(--accent);
+            background: hsl(var(--primary));
             color: #fff;
             font-weight: 700;
             font-size: 0.95em;
@@ -375,12 +433,14 @@
             font-family: inherit;
         }
         .btn-submit:hover:not(:disabled) {
-            background: var(--accent-hover);
+            background: hsl(var(--primary));
+            opacity: 0.85;
             transform: translateY(-2px);
         }
         .btn-submit:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
         .btn-submit.escaping {
             position: fixed;
@@ -401,16 +461,16 @@
             transform: none;
         }
 
-        /* 登录面板 */
+        /* ===== 登录面板 ===== */
         .login-panel-inner h2 {
             font-size: 1.4em;
             margin-bottom: 16px;
-            color: #111827;
+            color: hsl(var(--foreground));
         }
         .login-panel-inner .btn {
             width: 100%;
             padding: 12px;
-            background: var(--accent);
+            background: hsl(var(--primary));
             color: #fff;
             border: none;
             border-radius: 10px;
@@ -423,17 +483,17 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
         .login-panel-inner .btn:hover {
-            background: var(--accent-hover);
+            opacity: 0.85;
         }
         .login-panel-inner .btn-outline {
             background: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
+            color: hsl(var(--primary));
+            border: 1px solid hsl(var(--primary));
             box-shadow: none;
             margin-top: 0;
         }
         .login-panel-inner .btn-outline:hover {
-            background: #e6f0ff;
+            background: hsl(var(--accent));
         }
         .login-panel-inner .message {
             margin-top: 12px;
@@ -446,28 +506,28 @@
             color: #16a34a;
         }
 
-        /* 用户面板 */
+        /* ===== 用户面板 ===== */
         .user-panel-inner {
             text-align: center;
         }
         .user-panel-inner h2 {
             font-size: 1.4em;
             margin-bottom: 10px;
-            color: #111827;
+            color: hsl(var(--foreground));
         }
         .user-panel-inner p {
             font-size: 0.9em;
-            color: #374151;
+            color: hsl(var(--muted-foreground));
             margin: 8px 0 16px;
         }
         .user-panel-inner .email {
             font-weight: 700;
-            color: #2563eb;
+            color: hsl(var(--primary));
         }
         .user-panel-inner .btn-outline {
             background: transparent;
-            color: #2563eb;
-            border: 1px solid #2563eb;
+            color: hsl(var(--primary));
+            border: 1px solid hsl(var(--primary));
             padding: 8px 20px;
             border-radius: 8px;
             font-weight: 600;
@@ -477,7 +537,7 @@
             font-family: inherit;
         }
         .user-panel-inner .btn-outline:hover {
-            background: #e6f0ff;
+            background: hsl(var(--accent));
         }
         .user-panel-inner .message {
             margin-top: 10px;
@@ -486,9 +546,10 @@
             color: #dc2626;
         }
 
+        /* ===== 弹窗 ===== */
         .captcha-popup {
             position: fixed;
-            background: white;
+            background: hsl(var(--card));
             border-radius: 14px;
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
@@ -496,6 +557,8 @@
             width: 280px;
             display: none;
             text-align: center;
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
         }
         .captcha-popup.visible {
             display: block;
@@ -503,7 +566,7 @@
         .captcha-slider-bg {
             width: 100%;
             height: 44px;
-            background: #e5e7eb;
+            background: hsl(var(--muted));
             border-radius: 22px;
             position: relative;
             margin: 15px 0;
@@ -512,7 +575,7 @@
         }
         .captcha-slider-fill {
             height: 100%;
-            background: #2563eb;
+            background: hsl(var(--primary));
             border-radius: 22px;
             width: 0%;
             transition: width 0.1s linear;
@@ -533,16 +596,15 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: #2563eb;
+            color: hsl(var(--primary));
             transition: left 0.1s linear;
             z-index: 2;
             user-select: none;
         }
         .captcha-hint {
             font-size: 0.8em;
-            color: #6b7280;
+            color: hsl(var(--muted-foreground));
         }
-
         .overlay {
             position: fixed;
             top: 0;
@@ -563,7 +625,7 @@
             opacity: 1;
         }
         .contract-modal {
-            background: white;
+            background: hsl(var(--card));
             border-radius: 20px;
             padding: 28px;
             max-width: 450px;
@@ -571,15 +633,17 @@
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
         }
         .contract-modal h3 {
             margin-bottom: 16px;
-            color: #1e293b;
+            color: hsl(var(--foreground));
         }
         .contract-terms {
             font-size: 0.85em;
             line-height: 1.8;
-            color: #334155;
+            color: hsl(var(--muted-foreground));
             margin-bottom: 20px;
             white-space: pre-wrap;
         }
@@ -589,23 +653,28 @@
             gap: 10px;
             margin: 15px 0;
             font-weight: 600;
+            color: hsl(var(--foreground));
         }
         .contract-checkbox input {
             width: 20px;
             height: 20px;
-            accent-color: #2563eb;
+            accent-color: hsl(var(--primary));
         }
         .contract-btn {
             width: 100%;
             padding: 12px;
-            background: #2563eb;
-            color: white;
+            background: hsl(var(--primary));
+            color: #fff;
             border: none;
             border-radius: 10px;
             font-weight: 700;
             font-size: 1em;
             cursor: pointer;
             margin-top: 10px;
+            transition: 0.2s;
+        }
+        .contract-btn:hover:not(:disabled) {
+            opacity: 0.85;
         }
         .contract-btn:disabled {
             opacity: 0.5;
@@ -617,8 +686,8 @@
             top: -80px;
             left: 50%;
             transform: translateX(-50%);
-            background: #1e293b;
-            color: white;
+            background: hsl(var(--foreground));
+            color: hsl(var(--background));
             padding: 14px 28px;
             border-radius: 30px;
             font-weight: 700;
@@ -674,22 +743,24 @@
             opacity: 1;
         }
         .final-modal {
-            background: white;
+            background: hsl(var(--card));
             border-radius: 18px;
             padding: 24px 22px;
             width: 90%;
             max-width: 400px;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
         }
         .final-modal h3 {
             margin-bottom: 6px;
-            color: #1e293b;
+            color: hsl(var(--foreground));
             font-size: 1.1em;
         }
         .final-modal .step-badge {
             display: inline-block;
-            background: #2563eb;
+            background: hsl(var(--primary));
             color: #fff;
             border-radius: 20px;
             padding: 3px 14px;
@@ -701,17 +772,22 @@
             width: 100%;
             padding: 11px 14px;
             border-radius: 10px;
-            border: 2px solid #d1d5db;
+            border: 2px solid hsl(var(--border));
             font-size: 1em;
             text-align: center;
             outline: none;
             margin: 8px 0;
+            background: hsl(var(--muted));
+            color: hsl(var(--foreground));
+        }
+        .final-modal input:focus {
+            border-color: hsl(var(--primary));
         }
         .final-modal .digit-display {
             font-size: 2.5em;
             font-weight: 900;
             letter-spacing: 8px;
-            color: #1e293b;
+            color: hsl(var(--foreground));
             margin: 10px 0;
         }
         .final-modal .digit-display.hidden {
@@ -722,17 +798,25 @@
             padding: 11px;
             border-radius: 10px;
             border: none;
-            background: #2563eb;
+            background: hsl(var(--primary));
             color: #fff;
             font-weight: 700;
             font-size: 0.95em;
             cursor: pointer;
             margin-top: 6px;
+            transition: 0.2s;
+        }
+        .final-modal .btn-confirm:hover {
+            opacity: 0.85;
         }
         .final-input-area.hidden {
             display: none;
         }
+        .final-modal .err-msg {
+            min-height: 6px;
+        }
 
+        /* ===== 广告弹窗 ===== */
         .ad-popup {
             position: fixed;
             border-radius: 12px;
@@ -751,6 +835,7 @@
             line-height: 1.4;
             pointer-events: auto;
             letter-spacing: 0.03em;
+            color: #fff;
         }
         .ad-close {
             position: absolute;
@@ -808,10 +893,12 @@
         .drag-hint.visible {
             display: block;
         }
+
+        /* ===== 响应式 ===== */
         @media (max-width: 500px) {
-            .container {
+            .login-card {
                 padding: 20px 14px 22px;
-                border-radius: 16px;
+                border-radius: 1rem;
             }
             canvas#wheelCanvas {
                 width: 260px;
@@ -820,82 +907,199 @@
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-    <div class="container" id="mainContainer">
-        <!-- Tab 切换 -->
-        <div class="tabs" id="tabsBar">
-            <button class="tab-btn active" data-panel="registerPanel">注册</button>
-            <button class="tab-btn" data-panel="loginPanel">登录</button>
-        </div>
-
-        <!-- ===== 注册面板（恶搞） ===== -->
-        <div class="panel active" id="registerPanel">
-            <div class="header-area">
-                <div class="main-title">创建账号</div>
-                <div class="sub-title">请填写以下信息注册</div>
-            </div>
-            <div class="step-indicator">
-                <div class="step-dot active" id="stepDot1">1</div><div class="step-line" id="stepLine"></div>
-                <div class="step-dot" id="stepDot2">2</div><div class="step-line" id="stepLine2"></div>
-                <div class="step-dot" id="stepDot3">3</div>
-            </div>
-            <div class="wheel-wrapper" id="wheelWrapper">
-                <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);z-index:10;"><svg width="36" height="28"><polygon points="20,28 0,0 40,0" fill="#ef4444" stroke="#fff" stroke-width="1.2"/></svg></div>
-                <canvas id="wheelCanvas" width="300" height="300"></canvas>
-            </div>
-            <div class="spin-hint" id="spinHint">👆 点击转盘选择性别</div>
-            <div class="message-area" id="messageArea"></div>
-            <div class="attempt-counter" id="attemptCounter"></div>
-            <div class="next-step-form" id="nextStepForm">
-                <div style="text-align:center;margin-bottom:12px;"><span style="font-size:1.6em;">🎉</span><p style="color:#16a34a;font-weight:700;">性别选择成功：<strong>其他</strong> ✓</p></div>
-                <div class="form-group"><label>👤 用户名</label><input type="text" id="username" placeholder="请输入用户名"><div class="inline-error" id="usernameError">⛔ 该名字已被使用，请重试</div></div>
-                <div class="form-group"><label>📧 邮箱地址</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
-                <div class="form-group"><label>📱 手机号</label><div class="phone-slider-container"><input type="range" id="phoneSlider" min="12100000000" max="19900000000" value="16000000000" step="1"><span class="phone-value" id="phoneValue">160 0000 0000</span></div></div>
-                <div class="form-group"><label>🔒 密码</label><input type="password" id="regPassword" placeholder="至少8位"></div>
-                <div class="btn-anchor" id="btnAnchor">
-                    <div class="btn-target-zone" id="btnTargetZone">🎯 将按钮拖到此处</div>
-                    <button class="btn-submit" id="btnSubmit" disabled>🚀 完成注册</button>
+    <!-- ===== 导航栏（与 25e24.html 一致） ===== -->
+    <nav class="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border" style="background-color:hsla(var(--background),0.95);">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a class="flex items-center space-x-3 hover:opacity-80 transition-opacity pl-4 lg:pl-20" href="/">
+                    <img alt="Umi VPN Logo" width="20" height="20" src="/assets/image.jpg" class="flex-shrink-0 dark:invert" style="color:transparent" />
+                    <span class="text-lg font-medium">小陈同学-STUCDX</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="/index.html" class="nav-link">网站首页</a>
+                    <a href="/doc/article.html" class="nav-link">文章列表</a>
+                </div>
+                <div class="flex items-center gap-2 px-2 lg:px-4">
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" onclick="toggleTheme()" class="inline-flex items-center justify-center rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 w-8 bg-transparent border-0 cursor-pointer transition-colors" aria-label="切换主题">
+                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                            <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+                            <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                            <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+                        </svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon hidden">
+                            <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                        </svg>
+                    </button>
+                    <!-- Language Switcher -->
+                    <div class="dropdown-wrapper">
+                        <button onclick="toggleDropdown('lang-dropdown')" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 px-3 gap-1 bg-transparent border-0 cursor-pointer transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                <path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path>
+                                <path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path>
+                            </svg>
+                            <span class="hidden sm:inline">中文</span>
+                        </button>
+                        <div id="lang-dropdown" class="dropdown-menu">
+                            <a href="#">中文</a>
+                            <a href="#">English</a>
+                        </div>
+                    </div>
+                    <a class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 font-extrabold transition-colors no-underline" href="/doc/login.html">登录</a>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- ===== 登录面板 ===== -->
-        <div class="panel login-panel-inner" id="loginPanel">
-            <h2>登录</h2>
-            <div class="form-group"><label>邮箱地址</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
-            <div class="form-group"><label>密码</label><input type="password" id="loginPassword" placeholder="输入密码"></div>
-            <button class="btn" id="loginBtn">登录</button>
-            <div id="loginMsg" class="message"></div>
+    <!-- ===== 主内容 ===== -->
+    <main class="flex-1 flex items-center justify-center py-10 px-4">
+        <div class="w-full max-w-2xl login-card p-6 md:p-8">
+
+            <!-- Tab 切换 -->
+            <div class="flex border-b border-border mb-6" id="tabsBar">
+                <button class="tab-btn active" data-panel="registerPanel">注册</button>
+                <button class="tab-btn" data-panel="loginPanel">登录</button>
+            </div>
+
+            <!-- ===== 注册面板 ===== -->
+            <div class="panel active" id="registerPanel">
+                <div class="header-area text-center mb-4">
+                    <div class="main-title text-2xl font-bold" style="color:hsl(var(--foreground));">创建账号</div>
+                    <div class="sub-title text-sm" style="color:hsl(var(--muted-foreground));">请填写以下信息注册</div>
+                </div>
+
+                <div class="step-indicator">
+                    <div class="step-dot active" id="stepDot1">1</div>
+                    <div class="step-line" id="stepLine"></div>
+                    <div class="step-dot" id="stepDot2">2</div>
+                    <div class="step-line" id="stepLine2"></div>
+                    <div class="step-dot" id="stepDot3">3</div>
+                </div>
+
+                <div class="wheel-wrapper" id="wheelWrapper">
+                    <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);z-index:10;">
+                        <svg width="36" height="28"><polygon points="20,28 0,0 40,0" fill="#ef4444" stroke="#fff" stroke-width="1.2"/></svg>
+                    </div>
+                    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+                </div>
+                <div class="spin-hint text-center" id="spinHint">👆 点击转盘选择性别</div>
+                <div class="message-area text-center" id="messageArea"></div>
+                <div class="attempt-counter text-center" id="attemptCounter"></div>
+
+                <div class="next-step-form" id="nextStepForm">
+                    <div class="text-center mb-3">
+                        <span style="font-size:1.6em;">🎉</span>
+                        <p style="color:#16a34a;font-weight:700;">性别选择成功：<strong>其他</strong> ✓</p>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 用户名</label>
+                        <input type="text" id="username" placeholder="请输入用户名">
+                        <div class="inline-error" id="usernameError">⛔ 该名字已被使用，请重试</div>
+                    </div>
+                    <div class="form-group">
+                        <label>📧 邮箱地址</label>
+                        <input type="email" id="regEmail" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>📱 手机号</label>
+                        <div class="phone-slider-container">
+                            <input type="range" id="phoneSlider" min="12100000000" max="19900000000" value="16000000000" step="1">
+                            <span class="phone-value" id="phoneValue">160 0000 0000</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 密码</label>
+                        <input type="password" id="regPassword" placeholder="至少8位">
+                    </div>
+                    <div class="btn-anchor" id="btnAnchor">
+                        <div class="btn-target-zone" id="btnTargetZone">🎯 将按钮拖到此处</div>
+                        <button class="btn-submit" id="btnSubmit" disabled>🚀 完成注册</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 登录面板 ===== -->
+            <div class="panel login-panel-inner" id="loginPanel">
+                <h2>登录</h2>
+                <div class="form-group">
+                    <label>邮箱地址</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPassword" placeholder="输入密码">
+                </div>
+                <button class="btn" id="loginBtn">登录</button>
+                <div id="loginMsg" class="message"></div>
+            </div>
+
+            <!-- ===== 用户面板 ===== -->
+            <div class="panel user-panel-inner" id="userPanel">
+                <h2>✅ 登录成功</h2>
+                <p>欢迎，<span class="email" id="userEmailDisplay"></span>！</p>
+                <p style="font-size:0.75em;color:hsl(var(--muted-foreground));">经过千辛万苦，您终于完成了注册</p>
+                <button class="btn-outline" id="logoutBtn">退出登录</button>
+                <div id="userMsg" class="message"></div>
+            </div>
         </div>
+    </main>
 
-        <!-- ===== 用户面板 ===== -->
-        <div class="panel user-panel-inner" id="userPanel">
-            <h2>✅ 登录成功</h2>
-            <p>欢迎，<span class="email" id="userEmailDisplay"></span>！</p>
-            <p style="font-size:0.75em;color:#6b7280;">经过千辛万苦，您终于完成了注册</p>
-            <button class="btn-outline" id="logoutBtn">退出登录</button>
-            <div id="userMsg" class="message"></div>
+    <!-- ===== 页脚（与 25e24.html 一致） ===== -->
+    <footer class="bg-muted/50 py-12 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-6"><h3 class="text-2xl font-bold">小陈同学-STUCDX</h3></div>
+            <p class="text-muted-foreground mb-6">最懂科学的天才，最有品味的坏蛋 ——弗兰熊</p>
+            <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                <a class="hover:text-foreground transition-colors no-underline" href="/doc/privacy.html">隐私政策</a>
+                <a href="https://www.acgo.cn/person/5336808" target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors no-underline">个人主页</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== 弹窗（login.html 功能所需） ===== -->
+    <div class="captcha-popup" id="captchaPopup">
+        <strong>🤖 人机验证</strong>
+        <p style="font-size:0.8em;color:hsl(var(--muted-foreground));">请拖动滑块到最右侧</p>
+        <div class="captcha-slider-bg" id="captchaSliderBg">
+            <div class="captcha-slider-fill" id="captchaFill"></div>
+            <div class="captcha-slider-thumb" id="captchaThumb">➔</div>
+        </div>
+        <div class="captcha-hint" id="captchaHint">按住滑块拖动</div>
+    </div>
+
+    <div class="overlay" id="contractOverlay">
+        <div class="contract-modal">
+            <h3>📜 灵魂绑定契约</h3>
+            <div class="contract-terms">请仔细阅读以下条款：<br><br>1. 您同意将灵魂永久绑定至本平台，不可撤销。<br>2. 您承诺每天至少登录一次，否则灵魂将自动进入"休眠"状态。<br>3. 平台有权在您睡眠时使用您的账户进行自动化操作。<br>4. 您放弃对个人数据的所有权利，包括但不限于梦境内容。<br>5. 您同意接收每日上限为999+封的系统通知邮件。<br>6. 您承认自己是Gay。<br>7. 若您试图注销账户，需提交纸质申请并附上公证材料。<br>8. 最终解释权归本平台所有，包括对"所有"的定义。<br></div>
+            <div class="contract-checkbox">
+                <input type="checkbox" id="contractCheckbox"> 我已阅读并同意以上全部条款【✓】
+            </div>
+            <button class="contract-btn" id="contractAgreeBtn" disabled>同意并继续</button>
         </div>
     </div>
 
-    <!-- 人机验证滑块弹窗 -->
-    <div class="captcha-popup" id="captchaPopup"><strong>🤖 人机验证</strong><p style="font-size:0.8em;color:#64748b;">请拖动滑块到最右侧</p><div class="captcha-slider-bg" id="captchaSliderBg"><div class="captcha-slider-fill" id="captchaFill"></div><div class="captcha-slider-thumb" id="captchaThumb">➔</div></div><div class="captcha-hint" id="captchaHint">按住滑块拖动</div></div>
+    <div class="final-overlay" id="finalOverlay">
+        <div class="final-modal" id="finalModal"></div>
+    </div>
 
-    <!-- 契约弹窗 -->
-    <div class="overlay" id="contractOverlay"><div class="contract-modal"><h3>📜 灵魂绑定契约</h3><div class="contract-terms">请仔细阅读以下条款：<br><br>1. 您同意将灵魂永久绑定至本平台，不可撤销。<br>2. 您承诺每天至少登录一次，否则灵魂将自动进入"休眠"状态。<br>3. 平台有权在您睡眠时使用您的账户进行自动化操作。<br>4. 您放弃对个人数据的所有权利，包括但不限于梦境内容。<br>5. 您同意接收每日上限为999+封的系统通知邮件。<br>6. 您承认自己是Gay。<br>7. 若您试图注销账户，需提交纸质申请并附上公证材料。<br>8. 最终解释权归本平台所有，包括对"所有"的定义。<br></div><div class="contract-checkbox"><input type="checkbox" id="contractCheckbox"> 我已阅读并同意以上全部条款【✓】</div><button class="contract-btn" id="contractAgreeBtn" disabled>同意并继续</button></div></div>
-
-    <!-- 最终验证弹窗 -->
-    <div class="final-overlay" id="finalOverlay"><div class="final-modal" id="finalModal"></div></div>
     <div class="top-toast" id="topToast">📸 内容已截图</div>
     <div class="drag-hint" id="dragHint">🖱️ 抓住注册按钮，把它拖回原来的位置！</div>
     <div class="confetti-container" id="confettiContainer"></div>
 
+    <!-- ===== Supabase ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+
+    <!-- ===== 所有功能脚本（完整保留 login.html 的逻辑） ===== -->
     <script>
         (function() {
             // ========== Supabase 初始化 ==========
             const SUPABASE_URL = 'https://yruzwtugitxfmflbtdfp.supabase.co';
-            const SUPABASE_ANON_KEY = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m'; 
+            const SUPABASE_ANON_KEY = 'sb_publishable_ZuiLf2QX-6HB82kvEDLErQ_ML289S4m';
             const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // ========== DOM 元素 ==========
@@ -934,7 +1138,6 @@
             const finalOverlay = document.getElementById('finalOverlay');
             const finalModal = document.getElementById('finalModal');
 
-            // 登录相关 DOM
             const tabsBar = document.getElementById('tabsBar');
             const registerPanel = document.getElementById('registerPanel');
             const loginPanel = document.getElementById('loginPanel');
@@ -1443,7 +1646,6 @@
                 btnSubmit.removeEventListener('mousedown', onEscapeDragStart);
                 btnSubmit.removeEventListener('touchstart', onEscapeDragStart);
 
-                // ========== 调用 Supabase 注册 ==========
                 performSupabaseSignUp();
             }
 
@@ -1474,7 +1676,6 @@
                     btnSubmit.disabled = false;
                     btnSubmit.style.opacity = '1';
                     btnSubmit.style.cursor = 'pointer';
-                    // 允许重试
                     btnSubmit.addEventListener('click', function retry() {
                         btnSubmit.removeEventListener('click', retry);
                         performSupabaseSignUp();
@@ -1487,7 +1688,6 @@
                     stepLine2.classList.add('done');
                     spawnConfetti();
                     setTimeout(() => spawnConfetti(), 500);
-                    // 切换到用户面板
                     setTimeout(() => switchToUser(email), 1500);
                 }
             }
@@ -1541,7 +1741,6 @@
                     .preventDefault();
                     spinWheel(); } });
 
-            // Supabase 认证状态监听
             supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (event === 'SIGNED_IN' && session) { switchToUser(session.user.email); } else if (event ===
                     'SIGNED_OUT') { switchToAuth(); }
@@ -1549,7 +1748,74 @@
 
             drawWheel(0);
             checkSession();
+
+            // ===== 主题切换（与 25e24.html 一致） =====
+            (function() {
+                const stored = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (stored === 'dark' || (!stored && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                } else if (stored === 'light') {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                }
+                updateThemeIcons();
+            })();
+
+            window.toggleTheme = function() {
+                const isDark = document.documentElement.classList.contains('dark');
+                if (isDark) {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                    localStorage.setItem('theme', 'dark');
+                }
+                updateThemeIcons();
+            };
+
+            function updateThemeIcons() {
+                const isDark = document.documentElement.classList.contains('dark');
+                const sunIcon = document.getElementById('sun-icon');
+                const moonIcon = document.getElementById('moon-icon');
+                if (sunIcon && moonIcon) {
+                    if (isDark) {
+                        sunIcon.classList.add('hidden');
+                        moonIcon.classList.remove('hidden');
+                    } else {
+                        sunIcon.classList.remove('hidden');
+                        moonIcon.classList.add('hidden');
+                    }
+                }
+            }
+
+            window.toggleDropdown = function(id) {
+                const dropdown = document.getElementById(id);
+                if (!dropdown) return;
+                const isOpen = dropdown.classList.contains('show');
+                document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+                if (!isOpen) {
+                    dropdown.classList.add('show');
+                }
+            };
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown-wrapper')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+                }
+            });
+
         })();
     </script>
+
 </body>
 </html>
