@@ -1,8 +1,0 @@
-{
-  "name": "my-register-page",
-  "version": "1.0.0",
-  "description": "注册页面，使用 Vercel 环境变量注入 Supabase 密钥",
-  "scripts": {
-    "build": "node build.js"
-  }
-}

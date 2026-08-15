@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>友情链接 | 小陈同学-STUCDX</title>
+  <meta name="description" content="小陈同学-STUCDX 的友情链接页面，收录常逛的网站与朋友们的博客。" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))',
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))',
+            },
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))',
+            },
+            border: 'hsl(var(--border))',
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))',
+            },
+            ring: 'hsl(var(--ring))',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --primary: 221.2 83.2% 53.3%;
+      --primary-foreground: 210 40% 98%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --border: 214.3 31.8% 91.4%;
+      --ring: 221.2 83.2% 53.3%;
+    }
+    .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
+      --primary: 217.2 91.2% 59.8%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
+      --border: 217.2 32.6% 17.5%;
+      --ring: 224.3 76.3% 48%;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .nav-link {
+      color: hsl(var(--muted-foreground));
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+    .nav-link:hover {
+      color: hsl(var(--foreground));
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      z-index: 60;
+      min-width: 160px;
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: 0.5rem;
+      top: 100%;
+      margin-top: 0.25rem;
+      right: 0;
+    }
+    .dropdown-menu.show {
+      display: block;
+    }
+    .dropdown-menu a,
+    .dropdown-menu button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: hsl(var(--foreground));
+      transition: background-color 0.15s;
+      white-space: nowrap;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+      background-color: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+    .dropdown-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .lucide-icon {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "友情链接",
+      "url": "https://example.com/links.html",
+      "description": "小陈同学-STUCDX 的友情链接页面"
+    }
+  </script>
+
+  <div class="flex min-h-full flex-1">
+    <div id="left-rail" class="hidden xl:block w-0 xl:w-[160px] flex-shrink-0"></div>
+
+    <div class="min-w-0 flex-1 flex flex-col">
+      <main class="flex-1">
+        <!-- 导航栏 -->
+        <nav class="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border" style="background-color:hsla(var(--background),0.95);">
+                    <div class="container mx-auto px-4">
+                        <div class="flex items-center justify-between h-16">
+                            <a class="flex items-center space-x-3 hover:opacity-80 transition-opacity pl-4 lg:pl-20" href="/">
+                                <img alt="Umi VPN Logo" width="20" height="20" src="/assets/image.jpg" class="flex-shrink-0 dark:invert" style="color:transparent" />
+                                <span class="text-lg font-medium">小陈同学-STUCDX</span>
+                            </a>
+                            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                              <a href="/index.html" class="nav-link">网站首页</a>
+                              <a href="/doc/article.html" class="nav-link">文章列表</a>
+                              <a href="/doc/chat.html" class="nav-link">聊天室</a>
+                              <a href="/doc/friend.html" class="nav-link">友情链接</a>
+                            </div>
+                            <div class="flex items-center gap-2 px-2 lg:px-4">
+                                <!-- Theme Toggle -->
+                                <button id="theme-toggle" onclick="toggleTheme()" class="inline-flex items-center justify-center rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 w-8 bg-transparent border-0 cursor-pointer transition-colors" aria-label="切换主题">
+                                    <!-- Sun icon -->
+                                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                        <circle cx="12" cy="12" r="4"></circle>
+                                        <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                                        <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+                                        <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                                        <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+                                    </svg>
+                                    <!-- Moon icon -->
+                                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon hidden">
+                                        <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                                    </svg>
+                                </button>
+                                <!-- Language Switcher -->
+                                <div class="dropdown-wrapper">
+                                    <button onclick="toggleDropdown('lang-dropdown')" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 px-3 gap-1 bg-transparent border-0 cursor-pointer transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                            <path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path>
+                                            <path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path>
+                                        </svg>
+                                        <span class="hidden sm:inline">中文</span>
+                                    </button>
+                                </div>
+                                <a class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 font-extrabold transition-colors no-underline" href="/doc/login.html">登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+        <!-- 友情链接内容 -->
+        <section class="container mx-auto px-4 py-10 max-w-3xl">
+          <div class="mb-10">
+            <h1 class="text-4xl font-extrabold tracking-tight mb-4">友情链接</h1>
+            <p class="text-muted-foreground text-lg leading-relaxed">
+              这里收录了一些我常逛的网站和朋友们的博客。如果你也想交换友情链接，欢迎在页面底部申请。
+            </p>
+          </div>
+
+          <!-- 链接卡片网格 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md no-underline">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">G</div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="font-semibold text-foreground group-hover:text-primary transition-colors">GitHub</h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-primary transition-colors">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </div>
+                <p class="text-sm text-muted-foreground mt-1 leading-relaxed">全球最大的代码托管平台，开发者协作社区。</p>
+              </div>
+            </a>
+
+            <a href="https://cxybbs.top" target="_blank" rel="noopener noreferrer" class="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md no-underline">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">
+                <img src="/assets/rmdcxy.jpg">
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h3 class="font-semibold text-foreground group-hover:text-primary transition-colors">RMDCXY</h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-primary transition-colors">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </div>
+                <p class="text-sm text-muted-foreground mt-1 leading-relaxed">面向开发者的技术分享与交流社区。</p>
+              </div>
+            </a>
+
+
+
+
+
+          </div>
+
+          <!-- 申请友链 -->
+          <div class="rounded-xl border border-dashed border-border bg-muted/30 p-6 text-center">
+            <h2 class="text-xl font-bold mb-2">申请友链</h2>
+            <p class="text-muted-foreground mb-4">如果您的网站内容健康、稳定访问，欢迎与我交换友情链接。</p>
+            <a href="mailto:hello@example.com" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 font-medium no-underline transition-colors">发送邮件申请</a>
+          </div>
+        </section>
+      </main>
+
+      <!-- 页脚 -->
+      <footer class="bg-muted/50 py-12 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+          <div class="mb-6"><h3 class="text-2xl font-bold">小陈同学-STUCDX</h3></div>
+          <p class="text-muted-foreground mb-6">最懂科学的天才，最有品味的坏蛋 ——弗兰熊</p>
+          <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <a class="hover:text-foreground transition-colors no-underline" href="/doc/privacy.html">隐私政策</a>
+            <a href="https://www.acgo.cn/person/5336808" target="_blank" rel="noopener noreferrer" class="hover:text-foreground transition-colors no-underline">个人主页</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <div id="right-rail" class="hidden xl:block w-0 xl:w-[160px] flex-shrink-0"></div>
+  </div>
+
+  <!-- 脚本 -->
+  <script>
+    (function() {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else if (stored === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+      updateThemeIcons();
+    })();
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+      }
+      updateThemeIcons();
+    }
+
+    function updateThemeIcons() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const sunIcon = document.getElementById('sun-icon');
+      const moonIcon = document.getElementById('moon-icon');
+      if (sunIcon && moonIcon) {
+        if (isDark) {
+          sunIcon.classList.add('hidden');
+          moonIcon.classList.remove('hidden');
+        } else {
+          sunIcon.classList.remove('hidden');
+          moonIcon.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(id);
+      if (!dropdown) return;
+      const isOpen = dropdown.classList.contains('show');
+      document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+      if (!isOpen) {
+        dropdown.classList.add('show');
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.dropdown-wrapper')) {
+        document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+      }
+    });
+  </script>
+</body>
+</html>
