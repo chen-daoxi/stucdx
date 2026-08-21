@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^for marker in 'renderArticles' 'filterArticles' 'searchInput\\.addEventListener' 'categoryBlocks\\.forEach' 'tagPills\\.forEach'; do grep -q \"\\$marker\" doc/article\\.html \\|\\| exit 1; done; echo 'article list handlers: present'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

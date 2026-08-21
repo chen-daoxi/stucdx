@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>文档 | 小陈同学-STUCDX</title>
   <meta name="description" content="小陈同学-STUCDX 的文章页面，分享技术、思考与生活。" />
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -80,47 +79,6 @@
     }
     .nav-link:hover {
       color: hsl(var(--foreground));
-    }
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      z-index: 60;
-      min-width: 160px;
-      background: hsl(var(--card));
-      border: 1px solid hsl(var(--border));
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      padding: 0.5rem;
-      top: 100%;
-      margin-top: 0.25rem;
-      right: 0;
-    }
-    .dropdown-menu.show {
-      display: block;
-    }
-    .dropdown-menu a,
-    .dropdown-menu button {
-      display: block;
-      width: 100%;
-      text-align: left;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-      color: hsl(var(--foreground));
-      transition: background-color 0.15s;
-      white-space: nowrap;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-    }
-    .dropdown-menu a:hover,
-    .dropdown-menu button:hover {
-      background-color: hsl(var(--accent));
-      color: hsl(var(--accent-foreground));
-    }
-    .dropdown-wrapper {
-      position: relative;
-      display: inline-block;
     }
     .lucide-icon {
       width: 1em;
@@ -276,7 +234,51 @@
     <div class="min-w-0 flex-1 flex flex-col">
       <main class="flex-1">
         <!-- 导航栏 -->
-          <object data="/nav.html" type="text/html" style="width:100%; height:60px; display:block;"></object>
+          <nav class="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border" style="background-color:hsla(var(--background),0.95);">
+                    <div class="container mx-auto px-4">
+                        <div class="flex items-center justify-between h-16">
+                            <a class="flex items-center space-x-3 hover:opacity-80 transition-opacity pl-4 lg:pl-20" href="/">
+                                <img alt="Umi VPN Logo" width="20" height="20" src="/assets/image.jpg" class="flex-shrink-0 dark:invert" style="color:transparent" />
+                                <span class="text-lg font-medium">小陈同学-STUCDX</span>
+                            </a>
+                            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                              <a href="/index.html" class="nav-link">网站首页</a>
+                              <a href="/doc/article.html" class="nav-link">文章列表</a>
+                              <a href="/doc/chat-room.html" class="nav-link">聊天室</a>
+                              <a href="/doc/friend.html" class="nav-link">友情链接</a>
+                            </div>
+                            <div class="flex items-center gap-2 px-2 lg:px-4">
+                                <!-- Theme Toggle -->
+                                <button id="theme-toggle" onclick="toggleTheme()" class="inline-flex items-center justify-center rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 w-8 bg-transparent border-0 cursor-pointer transition-colors" aria-label="切换主题">
+                                    <!-- Sun icon -->
+                                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                        <circle cx="12" cy="12" r="4"></circle>
+                                        <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                                        <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+                                        <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                                        <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+                                    </svg>
+                                    <!-- Moon icon -->
+                                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon hidden">
+                                        <path d="M2
+                                        0.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                                    </svg>
+                                </button>
+                                <!-- Language Switcher -->
+                                <div>
+                                  <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground h-8 px-3 gap-1 bg-transparent border-0 cursor-pointer transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                            <path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path>
+                                            <path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path>
+                                        </svg>
+                                        <span class="hidden sm:inline">中文</span>
+                                    </button>
+                                </div>
+                                <a class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 font-extrabold transition-colors no-underline" href="/doc/login.html">登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
 
         <!-- 文章内容区域 -->
         <article class="container mx-auto px-4 py-10 max-w-3xl">
@@ -284,68 +286,22 @@
           <div class="mb-8">
             <div class="flex items-center gap-3 text-sm text-muted-foreground mb-4">
               <span class="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs font-medium">技术随笔</span>
-              <span>2026年8月5日</span>
-              <span>·</span>
-              <span>阅读约 3 分钟</span>
-            </div>
-            <h1 class="text-4xl font-extrabold tracking-tight mb-4">Stars Basic Script(SBS)开发日志</h1>
-            <div class="flex items-center gap-3 text-muted-foreground">
-              <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold">陈</div>
-              <span class="text-sm">小陈同学-STUCDX</span>
-            </div>
-          </div>
-
-          <!-- 特色图片（使用 figure 标签包裹） -->
+              const root = document.documentElement;
+              const storedTheme = localStorage.getItem('theme');
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              root.classList.toggle('dark', storedTheme === 'dark' || (!storedTheme && prefersDark));
+              updateThemeIcons();
           <figure class="mb-10">
             <img 
-              src="https://onemouse.indevs.in/26h05/article_cover.png" 
-              alt="个人知识库封面图" 
-              class="w-full rounded-xl"
-              loading="lazy"
-            />
-          </figure>
-
-
-          <!-- 正文内容 -->
-          <div class="article-content">
+                const isDark = root.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
             <p>本文章记录了Stars Basic Script(SBS)的开发日志</p>
             <h2>Stars Basic Script V0.1[26Y07V2801]</h2>
             <h3 class="text-2xl font-semibold mb-4 text-foreground">更新日志</h3>
             <ul class="list-disc list-inside space-y-2 text-muted-foreground ml-4">
-                <li>1.实现了Lexer类，增加了许多类型如：KEYWORD,NUMBER,STRING...</li>
-                <li>2.实现了词法分析</li>
-            </ul>
-            <p>附件：<a href="https://onemouse.indevs.in/26h05/Stars Basic Script V0.1[26Y07V2801].exe">Stars Basic Script V0.1[26Y07V2801].exe</a></p>
-            <p>;nbsp</p>
-            <h2>Stars Basic Script V0.2[26Y07V2902]</h2>
-            <h3 class="text-2xl font-semibold mb-4 text-foreground">更新日志</h3>
-            <ul class="list-disc list-inside space-y-2 text-muted-foreground ml-4">
-                <li>1.增加了变量表，用户可以通过set关键字来给变量赋值</li>
-                <li>2.在KEYWORD类中增加了 <strong>set</strong> 关键字</li>
-                <li>3.在KEYWORD类中增加了 <strong>output</strong> 关键字，用户可以通过此关键字来输出</li>
-                <li>4.增加了如果输入是空格就contiue的判断</li>
-                <li>5.增加了如果输入为exit就break的判断</li>
-                <li>6.增加了如果输入为output [变量]就输出变量的功能</li>
-                <li>7.增加了如果输入为var就输出所有变量的判断</li>
-                <li>8.增加了许多报错（不列了自己去试）</li>
-                <li>9.增加了如果输入为number类就像python一样输出这个数字的功能</li>
-            </ul>
-            <p>附件：<a href="https://onemouse.indevs.in/26h05/Stars Basic Script V0.2[26Y07V2902].exe">Stars Basic Script V0.2[26Y07V2902].exe</a></p>
-            <h2>Stars Basic Script V0.3[26Y07V3103]</h2>
-            <h3 class="text-2xl font-semibold mb-4 text-foreground">更新日志</h3>
-            <ul class="list-disc list-inside space-y-2 text-muted-foreground ml-4">
-                <li>1.在KEYWORD类中增加了 <strong>cleat</strong> 关键字</li>
-                <li>2.又增加了许多报错（不列了自己去试）</li>
-                <li>3.增加了+-*/运算和变量相加减</li>
-                <li>4.增加了clear清屏指令，适配Windows,linux,Macos,Androud</li>
-            </ul>
-            <p>附件：<a href="https://onemouse.indevs.in/26h05/Stars Basic Script V0.3[26Y07V3103].exe">Stars Basic Script V0.3[26Y07V3103].exe</a></p>
-        </article>
-      </main>
-
-      <!-- 页脚 -->
-      <footer class="bg-muted/50 py-12 mt-auto">
-        <div class="container mx-auto px-4 text-center">
+                const isDark = root.classList.contains('dark');
+                document.getElementById('sun-icon').classList.toggle('hidden', isDark);
+                document.getElementById('moon-icon').classList.toggle('hidden', !isDark);
           <div class="mb-6"><h3 class="text-2xl font-bold">小陈同学-STUCDX</h3></div>
           <p class="text-muted-foreground mb-6">最懂科学的天才，最有品味的坏蛋 ——弗兰熊</p>
           <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
@@ -361,69 +317,23 @@
 
   <!-- 脚本 -->
   <script>
-    (function() {
-      const stored = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (stored === 'dark' || (!stored && prefersDark)) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-      } else if (stored === 'light') {
-        document.documentElement.classList.add('light');
-        document.documentElement.classList.remove('dark');
-      }
-      updateThemeIcons();
-    })();
+    const root = document.documentElement;
+    const storedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.classList.toggle('dark', storedTheme === 'dark' || (!storedTheme && prefersDark));
+    updateThemeIcons();
 
     function toggleTheme() {
-      const isDark = document.documentElement.classList.contains('dark');
-      if (isDark) {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-        localStorage.setItem('theme', 'dark');
-      }
+      const isDark = root.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
       updateThemeIcons();
     }
 
     function updateThemeIcons() {
-      const isDark = document.documentElement.classList.contains('dark');
-      const sunIcon = document.getElementById('sun-icon');
-      const moonIcon = document.getElementById('moon-icon');
-      if (sunIcon && moonIcon) {
-        if (isDark) {
-          sunIcon.classList.add('hidden');
-          moonIcon.classList.remove('hidden');
-        } else {
-          sunIcon.classList.remove('hidden');
-          moonIcon.classList.add('hidden');
-        }
-      }
+      const isDark = root.classList.contains('dark');
+      document.getElementById('sun-icon').classList.toggle('hidden', isDark);
+      document.getElementById('moon-icon').classList.toggle('hidden', !isDark);
     }
-
-    function toggleDropdown(id) {
-      const dropdown = document.getElementById(id);
-      if (!dropdown) return;
-      const isOpen = dropdown.classList.contains('show');
-      document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
-      if (!isOpen) {
-        dropdown.classList.add('show');
-      }
-    }
-
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.dropdown-wrapper')) {
-        document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
-      }
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
-      }
-    });
   </script>
 </body>
 </html>
